@@ -52,7 +52,7 @@ const style = {
   bgcolor: "background.paper",
   boxShadow: 24,
   p: 4,
-  overflowY: "auto", // Enable vertical scrolling
+  overflowY: "auto",
   display: "flex",
   flexDirection: "column",
 };

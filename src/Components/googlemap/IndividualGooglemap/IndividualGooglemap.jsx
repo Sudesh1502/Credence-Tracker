@@ -2,6 +2,7 @@ import { GoogleMap, useJsApiLoader, MarkerF } from "@react-google-maps/api";
 import { memo, useCallback, useState } from "react";
 import IndividualNav from "./individualNav/IndividualNav.jsx";
 import IndividualInfo from "./IndividualInfo/IndividualInfo";
+import PlayBar from "./PlayBar/PlayBar.jsx";
 
 const containerStyle = {
   width: "100%",
@@ -14,6 +15,7 @@ const center = {
 };
 
 function IndividualGooglemap({ latitude, longitude, setIndividualMap }) {
+  const [showPlayBar, setShowPlayBar] = useState(false);
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY, // Use environment variable for the API key
@@ -49,9 +51,10 @@ function IndividualGooglemap({ latitude, longitude, setIndividualMap }) {
         <></>
       </GoogleMap>
       <div>
-        <IndividualNav setIndividualMap={setIndividualMap}/>
-        <IndividualInfo/>
-        <h1>Map Info</h1>
+        <IndividualNav setIndividualMap={setIndividualMap} setShowPlayBar={setShowPlayBar} />
+        {!showPlayBar? <PlayBar/>:<IndividualInfo/>}
+        
+        
       </div>
     </div>
   ) : (

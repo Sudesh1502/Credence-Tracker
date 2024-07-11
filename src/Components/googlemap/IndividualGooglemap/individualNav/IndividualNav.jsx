@@ -1,10 +1,14 @@
 import "./IndividualNav.css";
 import Button from "@mui/material/Button";
 
-const IndividualNav = ({ setIndividualMap }) => {
+const IndividualNav = ({ setIndividualMap, setShowPlayBar }) => {
   const handleClose = () => {
     setIndividualMap(false);
   };
+
+  const handleHistory = ()=> {
+    setShowPlayBar(true);
+  }
 
   return (
     <div className="individualNav">
@@ -29,6 +33,8 @@ const IndividualNav = ({ setIndividualMap }) => {
               backgroundColor: "#1a242f",
             },
           }}
+
+          onClick={handleHistory}
         >
           History
         </Button>
