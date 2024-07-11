@@ -1,0 +1,20 @@
+[
+    {
+        "id": "",
+        "state": "",
+        "branch": "",
+        "vehicle": "",
+        "address": "",
+        "panic": "",
+        "poi": "",
+        "lu": "",
+        "spd":"" ,
+        "km": "",
+        "since": "",
+        "btr": "",
+        "gps": "",
+        "iccid": "",
+        "soc": "",
+        "ext_power": ""
+    }
+]

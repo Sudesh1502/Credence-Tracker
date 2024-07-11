@@ -1,0 +1,27 @@
+[
+    {
+        "vehicle": "MH31FC100",
+        "stoppage_duration": "20D 03H 45M",
+        "address": "10, Rajendra Nagar, Yahodha Nagar, Nagpur, Maharashtra 440036, India"
+    },
+    {
+        "vehicle": "KA02EB500",
+        "stoppage_duration": "15D 01H 30M",
+        "address": "18, Malleshwaram, Bengaluru, Karnataka 560003, India"
+    },
+    {
+        "vehicle": "DL05AC750",
+        "stoppage_duration": "25D 05H 15M",
+        "address": "22, Connaught Place, New Delhi, Delhi 110001, India"
+    },
+    {
+        "vehicle": "UP20XY300",
+        "stoppage_duration": "10D 12H 20M",
+        "address": "30, Gomti Nagar, Lucknow, Uttar Pradesh 226010, India"
+    },
+    {
+        "vehicle": "TN07ZQ950",
+        "stoppage_duration": "18D 04H 55M",
+        "address": "15, Anna Nagar, Chennai, Tamil Nadu 600040, India"
+    }
+]

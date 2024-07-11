@@ -1,0 +1,35 @@
+export const COLUMNS = () => [
+    {
+      Header: '',
+      accessor: 'select',
+      Cell: ({ row }) => (
+        <input
+          type="checkbox"
+          checked={row.original.isSelected}
+          onChange={() => row.original.handleRowSelect(row.index)}
+        />
+      ),
+    },
+    {
+      Header: 'SN',
+      accessor: 'id',
+    },
+    {
+      Header: 'Profile Name',
+      accessor: '',
+    },
+    {
+        Header: 'Charges(Per Day)',
+        accessor: '',
+      },
+      {
+        Header: 'Profile Desc',
+        accessor: '',
+      },
+      {
+        Header: 'Status',
+        accessor: '',
+      }
+      
+  ];
+  
