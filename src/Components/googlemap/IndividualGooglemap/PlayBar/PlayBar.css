@@ -1,117 +1,124 @@
-.container{
-    width: 100%;
-    background-color: #ffffff;
-    color: black;
-    display: flex;
-    align-items: center;
-  }
-  .controlBar{
-      background-color: beige;
-  }
-  /* src/PlayBar.css */
-  .playbar-container{
-      background-color: #ffffff;
-      width: 15%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 30px 20px;
-      gap: 1.2rem;
-  }
-  
-  
-    input[type="range"]{
-      position:relative;
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      display: block;
-      width: 80%;
-      height: 8px;
-      background-color: #d5d5d5;
-      outline: none;
-    }
-    input[type="range"]::-webkit-slider-runnable-track{
-      -webkit-appearance: none;
-      height: 8px;
-  
-    }
-    input[type="range"]::-moz-track{
-      -moz-appearance: none;
-      height: 8px;
-      
-    }
-    input[type="range"]::-ms-track{
-      appearance: none;
-      height: 8px;
-    }
-    input[type="range"]::-webkit-slider-thumb{
-      -webkit-appearance: none;
-      height: 40px;
-      width: 8px;
-      background-color: #2c3e50;
-      border-radius: 5px;
-      /* pointer-events: auto; */
-      cursor: pointer;
-      border: none;
-      margin-top:-14px;
-  
-    }
-    input[type="range"]::-moz-range-thumb{
-      -webkit-appearance: none;
-      height: 8px;
-  
-    }
-    input[type="range"]::-ms-thumb{
-      -webkit-appearance: none;
-      height: 8px;
-  
-    }
-    input[type="range"]:active::-webkit-slider-thumb{
-      background-color: #ffffff;
-      border: 3px solid #2c3e50;
-    }
-    .playBar-btn{
-      border-radius: 50%;
-      background-color: #2c3e50;
-      color: #ffffff;
-      padding: 10px;
-      
-    }
-  
-    .playBarInfo{
-      display: flex;
-      gap: 15px;
-    }
-  
-    .dataInfo{
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      flex-direction: row;
-    }
-  
-    .head{
-      font-size: 1.3rem;
-      font-weight: 400;
-    }
-    .headData{
-      padding: 2px;
-      background-color: #d5d5d5;
-      margin-top: 12px;
-      border-radius: 8px;
-      padding-left: 10px;
-      padding-right: 10px;
-      color: #565353;
-    }
+.container {
+  width: 100%;
+  background-color: #ffffff;
+  color: black;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Align items to the start */
+}
 
-    .cutHistory{
-        margin-left: 3rem;
-        align-self: center;
-        padding: 5px 15px;
-        font-size: 1rem;
-        font-weight: 600;
-        border-radius: 6px;
-        border: none;
-        background-color: #2c3e50;
-        color: #ffffff;
-    }
+.playbar-container {
+  background-color: #ffffff;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 20px 5px 20px;
+  gap: 1.2rem;
+}
+
+.playbar-break {
+  display: block;
+  width: 100%;
+}
+
+input[type="range"] {
+  position: relative;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  display: block;
+  width: 80%;
+  height: 8px;
+  background-color: #d5d5d5;
+  outline: none;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  -webkit-appearance: none;
+  height: 8px;
+}
+
+input[type="range"]::-moz-track {
+  -moz-appearance: none;
+  height: 8px;
+}
+
+input[type="range"]::-ms-track {
+  appearance: none;
+  height: 8px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 40px;
+  width: 8px;
+  background-color: #2c3e50;
+  border-radius: 5px;
+  cursor: pointer;
+  border: none;
+  margin-top: -14px;
+}
+
+input[type="range"]::-moz-range-thumb {
+  -webkit-appearance: none;
+  height: 8px;
+}
+
+input[type="range"]::-ms-thumb {
+  -webkit-appearance: none;
+  height: 8px;
+}
+
+input[type="range"]:active::-webkit-slider-thumb {
+  background-color: #ffffff;
+  border: 3px solid #2c3e50;
+}
+
+.playBar-btn {
+  border-radius: 50%;
+  background-color: #2c3e50;
+  color: #ffffff;
+  padding: 5px;
+}
+
+.playBarInfo {
+  display: flex;
+  gap: 15px;
+  margin-left: 100px;
+  flex-wrap: wrap; /* Allow wrapping to handle line breaks */
+}
+
+.dataInfo {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex-direction: row;
+}
+
+.head {
+  font-size: 1.3rem;
+  font-weight: 400;
+}
+
+.headData {
+  padding: 2px;
+  background-color: #d5d5d5;
+  margin-top: 12px;
+  border-radius: 8px;
+  padding-left: 10px;
+  padding-right: 10px;
+  color: #565353;
+}
+
+.cutHistory {
+  margin-left: 3rem;
+  margin-right: 100px;
+  align-self: right;
+  padding: 5px 15px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 6px;
+  border: none;
+  background-color: #2c3e50;
+  color: #ffffff;
+}

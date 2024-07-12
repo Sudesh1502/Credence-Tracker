@@ -181,24 +181,10 @@ export const COLUMNS = [
     Header: 'Status',
     accessor: 'status'
   },
-  {
-    Header: 'Date as of',
-    accessor: 'spd'
-  },
+  
   {
     Header: 'In Area',
     accessor: 'kmjhc'
   },
-  {
-    Header: 'Near Landmark',
-    accessor: 'jhgj'
-  },
-  {
-    Header: 'AC Status',
-    accessor: 'jhjfk'
-  },
-  {
-    Header: 'Mobile No',
-    accessor:'sdfsdf'
-  }
+
 ];

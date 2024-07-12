@@ -26,10 +26,13 @@ p{
     padding: 0;
 }
 .infoHead{
-    font-size: 1rem;
+    font-size: 0.9rem;
     
 }
 .infoData{
-    font-size: 1.2rem;
+    font-size: 0.7rem;
     margin: 0 !important;
+}
+.css-1sir9cm-MuiPaper-root {
+    line-height: 0.2 !important;
 }

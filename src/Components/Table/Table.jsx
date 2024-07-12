@@ -97,6 +97,8 @@ export const Tablee = ({ data }) => {
   const [lati, setLati] = useState(0);
   const [longi, setLongi] = useState(0);
   const [individualMap, setIndividualMap] = useState(false);
+  const [lat, setLat]= useState(0);
+  const [lng, setLng] = useState(0);
 
   useEffect(() => {
     setFilteredRows(data.map((row) => ({ ...row, isSelected: false })));
@@ -128,6 +130,11 @@ export const Tablee = ({ data }) => {
     //   }
     // }
   }, [filteredRows]);
+
+
+  const handleClickonIndividual = () =>{
+
+  }
 
 
   useEffect(()=>{
@@ -488,24 +495,33 @@ export const Tablee = ({ data }) => {
 
         {/* GoogleMaps */}
         {individualMap ? (
-          <IndividualGooglemap setIndividualMap = {setIndividualMap} />
+          <IndividualGooglemap latitude={latitude} longitude={longitude} setIndividualMap = {setIndividualMap} style={{width:"100%"}} />
         ) : (
           <GoogleMapComponent latitude={latitude} longitude={longitude} />
         )}
 
         <br />
       </div>
-      <Cards
+
+      {individualMap ? (
+          <></>
+        ) : (
+          <Cards
         vehicleRunningCount={vehicleRunningCount}
         vehicleStoppedCount={vehicleStoppedCount}
         vehicleOverspeedCount={vehicleOverspeedCount}
         vehicleIdleCount={vehicleIdleCount}
         vehicleUnreachableCount={vehicleUnreachableCount}
-      />
+      /> 
+        )}
+      
       <br />
 
       <div>
-        <div
+      {individualMap ? (
+          <></>
+        ) : (
+          <div
           style={{
             display: "flex",
             alignItems: "center",
@@ -546,9 +562,14 @@ export const Tablee = ({ data }) => {
           >
             Manage Columns
           </Button>
-        </div>
-
-        <Paper sx={{ width: "100%", overflow: "hidden", marginTop: "16px" }}>
+        </div> 
+        )}
+        
+            {/* GoogleMaps */}
+        {individualMap ? (
+          <></>
+        ) : (
+          <Paper sx={{ width: "100%", overflow: "hidden", marginTop: "16px" }}>
           <TableContainer sx={{ maxHeight: "100%" }}>
             <Table stickyHeader aria-label="sticky table">
               <TableHead>
@@ -700,7 +721,12 @@ export const Tablee = ({ data }) => {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Paper>
-        <Button
+        )}
+
+{individualMap ? (
+          <></>
+        ) : (
+          <Button
           variant="contained"
           color="primary"
           startIcon={<ImportExportIcon />}
@@ -714,7 +740,10 @@ export const Tablee = ({ data }) => {
           }}
         >
           Export
-        </Button>
+        </Button> 
+        )}
+        
+        
 
         <Modal
           open={modalOpen}
