@@ -51,8 +51,9 @@ function IndividualGooglemap({ latitude, longitude, setIndividualMap }) {
         <></>
       </GoogleMap>
       <div>
-        <IndividualNav setIndividualMap={setIndividualMap} setShowPlayBar={setShowPlayBar} />
-        {!showPlayBar? <PlayBar/>:<IndividualInfo/>}
+        {showPlayBar? <></>:<IndividualNav setIndividualMap={setIndividualMap} setShowPlayBar={setShowPlayBar}/>}
+        
+        {showPlayBar? <PlayBar setShowPlayBar={setShowPlayBar}/>:<IndividualInfo/>}
         
         
       </div>

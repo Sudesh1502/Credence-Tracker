@@ -2,7 +2,7 @@ import "./PlayBar.css"
 import { useState, useEffect } from 'react';
 import { FaForward, FaPause } from "react-icons/fa6";
 import { FaFastBackward, FaPlay } from "react-icons/fa";
-const PlayBar = () => {
+const PlayBar = ({setShowPlayBar}) => {
 
 
     const [isPlaying, setIsPlaying] = useState(false);
@@ -15,6 +15,10 @@ const PlayBar = () => {
     const handleProgressChange = (event) => {
       setProgress(event.target.value);
     };
+
+    const handleCutHistory = () => {
+        setShowPlayBar(false);
+    }
   
     useEffect(() => {
       const mySlider = document.getElementById('progress-bar');
@@ -80,6 +84,8 @@ const PlayBar = () => {
           </div>
           {/* END OF DATA INFO  */}
         </div>
+
+        <button className="cutHistory" onClick={handleCutHistory}>X</button>
         {/* CONTAINER ENDS HERE  */}
       </div>
   )

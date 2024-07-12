@@ -104,12 +104,12 @@ export const Tablee = ({ data }) => {
 
   useEffect(() => {
     setLatitude(data.map((row) => row.latitude));
-    // console.log(latitude); console.log(latitude[0]);
+    console.log(latitude);
   }, [data]);
 
   useEffect(() => {
     setLongitude(data.map((row) => row.longitude));
-    //  console.log(longitude);
+     console.log(longitude);
   }, [data]);
 
   useEffect(() => {
@@ -128,6 +128,31 @@ export const Tablee = ({ data }) => {
     //   }
     // }
   }, [filteredRows]);
+
+
+  useEffect(()=>{
+    const running = data.filter((row)=>row.speed>0).length;
+    setVehicleRunningCount(running);
+
+    const stopped = data.filter((row)=>row.speed===0 && row.status==='offline').length;
+    setVehicleStoppedCount(stopped);
+
+    const overspeed = data.filter((row)=>row.speed>140).length;
+    setVehicleOverspeedCount(overspeed);
+
+    const idle = data.filter((row)=>row.speed===0 && row.status==='online').length;
+    setVehicleIdleCount(idle);
+
+    const currentTime = new Date();
+    const twelveHoursInMilliseconds = 12 * 60 * 60 * 1000;
+
+    const unreachable = data.filter((row) => 
+      row.status === 'offline' && 
+        currentTime - new Date(row.lastUpdate) >twelveHoursInMilliseconds
+    ).length;
+
+    setVehicleUnreachableCount(unreachable);
+  },[data])
 
   useEffect(() => {
     const getAddressFromLatLng = async (lat, lng) => {
@@ -465,7 +490,7 @@ export const Tablee = ({ data }) => {
         {individualMap ? (
           <IndividualGooglemap setIndividualMap = {setIndividualMap} />
         ) : (
-          <GoogleMapComponent lati={latitude} longi={longitude} />
+          <GoogleMapComponent latitude={latitude} longitude={longitude} />
         )}
 
         <br />

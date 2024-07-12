@@ -16,7 +16,7 @@ import moment from 'moment-timezone';
 
 // Define a component to fetch and display the address
 const AddressFetcher = ({ lat, lng }) => {
-  // console.log('lati', lat, lng);
+  console.log('lati', lat, lng);
   const [address, setAddress] = useState('');
 
   useEffect(() => {

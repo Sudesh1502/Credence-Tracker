@@ -62,6 +62,7 @@ function App() {
   const [selectedTab, setSelectedTab] = useState(0);
   const [component, setComponent] = useState("");
   const [apiData, setApiData] = useState([]);
+  const [individualMap, setIndividualMap] = useState(false);
 
   // const handleClick = async () => {
   //   try {

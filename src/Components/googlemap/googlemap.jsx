@@ -1,63 +1,90 @@
-import { GoogleMap, useJsApiLoader, MarkerF } from '@react-google-maps/api';
-import { memo, useCallback, useState } from 'react';
-import CustomMarkers from "./carImage.jpg"
+import React, { useEffect, useRef, useState } from "react";
+import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+import L from "leaflet";
+import useGeolocation from "../Hooks/useGeolocation";
+import markerUrl from "../googlemap/SVG/Car/C2.svg"
 
-const containerStyle = {
-  width: '1000px',
-  height: '600px'
+// Custom marker icon
+const markerIcon = new L.Icon({
+  iconUrl: markerUrl,
+  iconSize: [35, 45],
+});
+
+// OSM provider configuration
+const osmProvider = {
+  maptiler: {
+    url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    attribution:
+      '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+  },
 };
 
-const center = {
-  lat: -3.745,
-  lng: -38.523
-};
+function GoogleMapComponent({latitude, longitude}) {
 
-function GoogleMapComponent({ latitude, longitude }) {
-  const { isLoaded } = useJsApiLoader({
-    id: 'google-map-script',
-    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY // Use environment variable for the API key
-  });
+  
+  const [center, setCenter] = useState({ lat: 19.9606, lng: 79.2961 });
+  const ZOOM_LEVEL = 7;
+  const mapRef = useRef();
+  const location = useGeolocation();
 
-  const [map, setMap] = useState(null);
+  const showMyLocation = () => {
+    
+      mapRef.current.flyTo(
+        [21.128142222222223, 79.10407111111111],
+        18,
+        { animate: true }
+      );
+    
+  };
 
-  const onLoad = useCallback(function callback(map) {
-    const bounds = new window.google.maps.LatLngBounds(center);
-    map.fitBounds(bounds);
-    setMap(map);
-  }, []);
 
-  console.log(process.env.REACT_APP_GOOGLE_MAPS_API_KEY);
 
-  const onUnmount = useCallback(function callback(map) {
-    setMap(null);
-  }, []);
 
-  return isLoaded ? (
-    <GoogleMap
-      mapContainerStyle={containerStyle}
-      center={center}
-      zoom={15}
-      onLoad={onLoad}
-      onUnmount={onUnmount}
-      options={{
-        streetViewControl: false,
-        mapTypeControl: false,
-      }}
-    >
-      <MarkerF
-        position={center}
-        options={{
-          icon: {
-            url: CustomMarkers,
-            scaledSize: new window.google.maps.Size(50, 50), // Adjust the size here
-          },
-        }}
-      />
-      { /* Child components, such as markers, info windows, etc. */ }
-      <>
-      </>
-    </GoogleMap>
-  ) : <></>;
+  function pairLatLng(latitude, longitude) {
+    // Create an array to hold the paired objects
+    const pairedArray = [];
+
+    // Loop through the arrays and create objects
+    for (let i = 0; i < latitude.length; i++) {
+      const latLngObject = [
+        latitude[i],
+        longitude[i],
+    ]
+      pairedArray.push(latLngObject);
+    }
+
+    return pairedArray;
+  }
+
+  const points = pairLatLng(latitude, longitude)
+
+  return (
+    <>
+      <MapContainer
+        center={center}
+        zoom={ZOOM_LEVEL}
+        ref={mapRef}
+        style={{ height: "600px", width: "1000px" }}
+      >
+        <TileLayer
+          url={osmProvider.maptiler.url}
+          attribution={osmProvider.maptiler.attribution}
+        />
+
+{points.map((point, index) => (
+        <Marker key={index} position={point} icon={markerIcon}>
+          <Popup>
+            <b>Location {index + 1}</b>
+          </Popup>
+        </Marker>
+      ))}
+
+        
+      </MapContainer>
+      <button onClick={showMyLocation}>Show My Location</button>
+    </>
+  );
 }
 
-export default memo(GoogleMapComponent);
+export default GoogleMapComponent;
