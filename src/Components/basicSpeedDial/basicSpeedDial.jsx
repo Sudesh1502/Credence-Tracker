@@ -45,6 +45,7 @@ export const BasicSpeedDial = () => {
     <Box sx={{ position: 'fixed', bottom: 16, right: 16, zIndex: 1300 }}>
       <SpeedDial
         ariaLabel="SpeedDial basic example"
+        direction="left"
         sx={{ bottom: 16, right: 16, zIndex: 1000 }}
         icon={<SpeedDialIcon />}
         FabProps={{
