@@ -243,18 +243,12 @@ export const Tablee = ({ data }) => {
   };
 
   const handleLocationClick = (latitude, longitude) => {
-    // <div style={{ height: '500px', width: '100%' }}>
-    //   <iframe
-    //     src={`https://maps.google.com/maps?q=${latitude[1]},${longitude[1]}&z=${zoom}&output=embed`}
-    //     style={{ border: 0, height: '100%', width: '100%' }}
-    //     allowFullScreen
-    //     loading="lazy"
-    //     referrerPolicy="no-referrer-when-downgrade"
-    //     title="google map"
-    //   ></iframe>
-    // </div>
-    setLati(latitude);
-    setLongi(longitude);
+    setIndividualMap(true);
+    
+    setLati (latitude);
+    
+    setLongi (longitude);
+    
   };
 
   const handleExport = () => {
@@ -492,7 +486,7 @@ export const Tablee = ({ data }) => {
 
         {/* GoogleMaps */}
         {individualMap ? (
-          <IndividualGooglemap latitude={latitude} longitude={longitude} setIndividualMap = {setIndividualMap} style={{width:"100%"}} />
+          <IndividualGooglemap latitude={latitude} longitude={longitude} setIndividualMap = {setIndividualMap} style={{width:"100%"}}  data={data}/>
         ) : (
           <GoogleMapComponent latitude={latitude} longitude={longitude} />
         )}
@@ -687,7 +681,8 @@ export const Tablee = ({ data }) => {
                               onClick={() => {
 
                                 if (column.accessor === "location") {
-                                  setIndividualMap(true)
+                                 
+                                  handleLocationClick(row.latitude, row.longitude)
                                   
                                 } else if (column.accessor === "name") {
                                   handleVehicleClick();
