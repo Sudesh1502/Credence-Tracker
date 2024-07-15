@@ -216,9 +216,84 @@ export const DriverMaster = ({ data, handleDrivername, handleMobileNo }) => {
      
      fetchDeviceData();
    }, []); // Empty dependency array ensures this effect runs only once on component mount
- 
-   
 
+  //  =============================================================================================================
+ 
+  //  const postDeviceData = async () => {
+  //   try {
+  //     const username = "hbgadget221@gmail.com"; // Replace with your actual username
+  //   const password = "123456"; // Replace with your actual password
+  //   const token = btoa(`${username}:${password}`);
+      
+  //   const data = {
+  //     id: 99,
+  //     attributes: {
+  //       MILEAGE: 20
+  //     },
+  //     groupId: 1,
+  //     calendarId: 0, // Ensure this matches an existing entry in tc_calendars if required
+  //     name: "XUV",
+  //     uniqueId: "35517210386411111",
+  //     status: "unknown",
+  //     lastUpdate: "2024-07-09T07:39:09.000+00:00",
+  //     positionId: 15849698,
+  //     phone: "8766955379",
+  //     model: "G86",
+  //     contact: "8766955379",
+  //     category: "Super car",
+  //     disabled: false,
+  //     expirationTime: null
+  //   };
+    
+  
+      
+  //     const response = await axios.post(
+  //       "https://rocketsalestracker.com/api/devices",
+  //       data,
+  //       {
+  //         headers: {
+  //           Authorization: `Basic ${token}`,
+  //           'Content-Type': 'application/json'
+  //         }
+  //       }
+  //     );
+  
+  //     console.log('Response data:', response.data); 
+  //   } catch (error) {
+  //     console.error('Error posting device data:', error.response ? error.response.data : error.message);
+  //   }
+  // };
+  
+
+  
+  
+  // postDeviceData();
+  const deleteDeviceData = async (deviceId) => {
+    try {
+      const username = "hbgadget221@gmail.com"; // Replace with your actual username
+      const password = "123456"; // Replace with your actual password
+      const token = btoa(`${username}:${password}`);
+      
+      const response = await axios.delete(
+        `https://rocketsalestracker.com/api/devices/${deviceId}`,
+        {
+          headers: {
+            Authorization: `Basic ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+      
+      console.log('Delete response:', response.data); 
+    } catch (error) {
+      console.error('Error deleting device data:', error.response ? error.response.data : error.message);
+    }
+  };
+  
+  const deviceId = 99; // The ID of the device you want to delete
+  deleteDeviceData(deviceId);
+
+  // =============================================================================================================
 
   const handleModalClose = () => {
     setEditModalOpen(false);

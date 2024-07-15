@@ -106,12 +106,12 @@ export const Tablee = ({ data }) => {
 
   useEffect(() => {
     setLatitude(data.map((row) => row.latitude));
-    console.log(latitude);
+    // console.log(latitude);
   }, [data]);
 
   useEffect(() => {
     setLongitude(data.map((row) => row.longitude));
-     console.log(longitude);
+    //  console.log(longitude);
   }, [data]);
 
   useEffect(() => {
@@ -132,9 +132,6 @@ export const Tablee = ({ data }) => {
   }, [filteredRows]);
 
 
-  const handleClickonIndividual = () =>{
-
-  }
 
 
   useEffect(()=>{
@@ -198,7 +195,7 @@ export const Tablee = ({ data }) => {
         })
       );
       setAddressesValue(addresses);
-      console.log(addresses);
+      // console.log(addresses);
     };
 
     fetchAddresses();

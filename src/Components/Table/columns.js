@@ -16,19 +16,15 @@ import moment from 'moment-timezone';
 
 // Define a component to fetch and display the address
 const AddressFetcher = ({ lat, lng }) => {
-  console.log('lati', lat, lng);
   const [address, setAddress] = useState('');
 
   useEffect(() => {
     const fetchAddress = async () => {
       try {
-        const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyC30e6tiNsE_rn2YY8kfPFfNPZxG3YlOu4`);
-        console.log(response.data.results);
-        
-          const fetchedAddress = response.data.results[0];
-          console.log(fetchAddress);
-          setAddress(fetchedAddress);
-        
+        const response = await axios.get(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`);
+        const fetchedAddress = `${response.data.address.neighbourhood}, ${response.data.address.county}, ${response.data.address.state}, ${response.data.address.postcode}, ${response.data.address.country}`;
+        // console.log(fetchedAddress) // Accessing the formatted address
+        setAddress(fetchedAddress); // Updating the address state
       } catch (error) {
         console.error("Error fetching address:", error);
         setAddress('Error fetching address');
@@ -42,7 +38,6 @@ const AddressFetcher = ({ lat, lng }) => {
 
   return <span>{address}</span>;
 };
-
 // Define your columns array
 export const COLUMNS = [
   {
@@ -136,7 +131,7 @@ export const COLUMNS = [
     },
   },
   {
-    Header: 'Address',
+    Header: 'Address                                            .',
     accessor: 'kjn',
     Cell: ({ row }) => {
       

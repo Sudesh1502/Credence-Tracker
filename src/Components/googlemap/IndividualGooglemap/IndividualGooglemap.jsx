@@ -15,6 +15,7 @@ import { FaTruck, FaRegSnowflake } from "react-icons/fa";
 import { MdAccessTime } from "react-icons/md";
 import { BsFillFuelPumpFill } from "react-icons/bs";
 import "./IndividualGooglemap.css";
+import BottomSlider from "./BottomSlider/BottomSlider.jsx";
 
 const markerIcon = new L.Icon({
   iconUrl: markerUrl,
@@ -51,6 +52,7 @@ function IndividualGooglemap({ latitude, longitude, setIndividualMap }) {
   };
 
   const showMyLocation = () => {
+
     mapRef.current.flyTo([21.128142222222223, 79.10407111111111], 18, {
       animate: true,
     });
@@ -89,7 +91,10 @@ function IndividualGooglemap({ latitude, longitude, setIndividualMap }) {
             <Marker key={index} position={point} icon={markerIcon}>
               <Popup style={{ fontSize: "1.1rem" }}>
                 <div className="popup" style={{ height: "250px" }}>
+                  <div className="tooltipHead">
                   <h2 style={{ marginBottom: "8px" }}>MH31FC1100</h2>
+                  <button className="geoFencing">Geofencing</button>
+                  </div>
                   <div className="popupInfo">
                     <div className="popupElement">
                       <div>
@@ -156,7 +161,7 @@ function IndividualGooglemap({ latitude, longitude, setIndividualMap }) {
         </MapContainer>
       </div>
       <button onClick={showMyLocation}>Show My Location</button>
-      <div>
+      <div className="InfoContainer">
         {showPlayBar ? null : (
           <IndividualNav
             setIndividualMap={setIndividualMap}
@@ -168,7 +173,10 @@ function IndividualGooglemap({ latitude, longitude, setIndividualMap }) {
         ) : (
           <IndividualInfo />
         )}
+        <BottomSlider/>
       </div>
+
+      
     </>
   );
 }
