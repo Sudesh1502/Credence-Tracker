@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect, useCallback } from "react";
-import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import { MapContainer, Marker, Polyline, Popup, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import IndividualNav from "./individualNav/IndividualNav.jsx";
@@ -50,23 +50,25 @@ const initialCenter = {
   lng: 79.2961,
 };
 
+// PopupElement component moved here
+const PopupElement = ({ icon, text }) => (
+  <div className="popupElement">
+    <div>{icon}</div>
+    <span style={{ fontSize: "0.9rem", color: "#fff" }}>{text}</span>
+  </div>
+);
+
 function IndividualGooglemap({ data, setIndividualMap, individualDataObj }) {
   const [showPlayBar, setShowPlayBar] = useState(false);
-  const [isFullScreen, setIsFullScreen] = useState(false);
-  const [vehicleData, setVehicleData] = useState([]);
   const [center, setCenter] = useState(initialCenter);
+  const [address, setAddress] = useState("N/A");
   const ZOOM_LEVEL = 20;  // Maximum zoom level
   const mapRef = useRef();
-
-  const toggleFullScreen = () => {
-    const mapContainer = mapRef.current.leafletElement.getContainer();
-    if (!isFullScreen) {
-      mapContainer.requestFullscreen();
-    } else {
-      document.exitFullscreen();
-    }
-    setIsFullScreen(!isFullScreen);
-  };
+  const [startTime, setStartTime] = useState();
+  const [stopTime, setStopTime] = useState();
+  const [playbackData, setPlaybackData] = useState();
+  const [wait, setWait] = useState('');
+  const [clicked, setClicked] =useState(false);
 
   const showMyLocation = useCallback((lati, longi) => {
     mapRef.current.flyTo([lati, longi], ZOOM_LEVEL, {
@@ -87,27 +89,60 @@ function IndividualGooglemap({ data, setIndividualMap, individualDataObj }) {
     }
   };
 
+
+  //Getting playback data
+ const fetchPlaybackData = async () => {
+  setClicked(true);
+try {
+  const username = "hbgadget221@gmail.com"; // Replace with your actual username
+  const password = "123456"; // Replace with your actual password
+  const token = btoa(`${username}:${password}`); // Base64 encode the username and password
+  const response1 = await axios.get(`
+    https://rocketsalestracker.com/api/positions?deviceId=1685&from=2024-07-14T18:30:00.000Z&to=2024-07-15T18:29:59.999Z`,
+    {
+      headers: {
+        Authorization: `Basic ${token}`, // Replace with your actual token
+      },
+    }
+  );
+  console.log(response1);
+  setPlaybackData(response1.data); // Update state variable with device API data
+} catch (error) {
+  console.error("Error fetching device data:", error);
+}
+};
+console.log("playback value", playbackData);
+// console.log("playback latitude",playbackData.latitude);
+
+const pairedArray = [];
+
+useEffect(() => {
+if (playbackData === undefined && clicked) {
+  setWait('Please wait while the API loads...');
+} else {
+  setWait('');
+}
+}, [playbackData]);
+
+if(playbackData !==undefined){
+playbackData.map((row)=>{
+const latLngObject = [row.latitude, row.longitude];
+pairedArray.push(latLngObject);})}
+
+console.log("pairedArray", pairedArray);
+
+const points = pairedArray;
+
+
+
+
   useEffect(() => {
-    const processData = async () => {
-      const processedData = await Promise.all(
-        data.map(async (item) => {
-          const address = await fetchAddress(item.latitude, item.longitude);
-          return {
-            id: item.id,
-            name: item.name,
-            address,
-            distance: item.distance,
-            ignition: item.ignition,
-            latitude: item.latitude,
-            longitude: item.longitude,
-            category: item.category,
-          };
-        })
-      );
-      setVehicleData(processedData);
+    const updateAddress = async () => {
+      const add = await fetchAddress(individualDataObj.latitude, individualDataObj.longitude);
+      setAddress(add);
     };
-    processData();
-  }, [data]);
+    updateAddress();
+  }, [individualDataObj]);
 
   // Function to get the appropriate icon based on the category
   const getIconByCategory = (category) => {
@@ -132,6 +167,8 @@ function IndividualGooglemap({ data, setIndividualMap, individualDataObj }) {
         </DemoContainer>
       </LocalizationProvider>
 
+      <button onClick={() =>fetchPlaybackData()}>Get Playback</button>
+      <div>{wait}</div>
       <div className="mapContainer">
         <MapContainer
           center={center}
@@ -141,39 +178,35 @@ function IndividualGooglemap({ data, setIndividualMap, individualDataObj }) {
         >
           <TileLayer url={osmProvider.url} attribution={osmProvider.attribution} />
 
-          {vehicleData.map((vehicle, index) => (
-            vehicle.latitude && vehicle.longitude && (
-              <Marker
-                key={index}
-                position={[vehicle.latitude, vehicle.longitude]}
-                icon={getIconByCategory(vehicle.category)}
-                eventHandlers={{
-                  click: () => {
-                    console.log(vehicle);
-                    showMyLocation(vehicle.latitude, vehicle.longitude);
-                  },
-                }}
-              >
-                <Popup style={{ fontSize: "1.1rem" }}>
-                  <div className="popup" style={{ height: "250px" }}>
-                    <div className="tooltipHead">
-                      <h2 style={{ marginBottom: "8px" }}>{vehicle.name}</h2>
-                      <button className="geoFencing">Geofencing</button>
-                    </div>
-                    <div className="popupInfo">
-                      <PopupElement icon={<MdLocationPin />} text={vehicle.address} />
-                      <PopupElement icon={<FcAlarmClock />} text="12/07/2024 12:51:46" />
-                      <PopupElement icon={<SiGoogleearthengine />} text={vehicle.ignition ? "Ignition On" : "Ignition Off"} />
-                      <PopupElement icon={<FaTruck />} text={`${vehicle.distance} kmph`} />
-                      <PopupElement icon={<MdAccessTime />} text="12D 01H 04M" />
-                      <PopupElement icon={<FaRegSnowflake />} text="Ac off" />
-                      <PopupElement icon={<BsFillFuelPumpFill />} text="0.00 L" />
-                    </div>
-                  </div>
-                </Popup>
-              </Marker>
-            )
-          ))}
+          <Marker
+            position={[individualDataObj.latitude, individualDataObj.longitude]}
+            icon={getIconByCategory(individualDataObj.category)}
+            eventHandlers={{
+              click: () => {
+                showMyLocation(individualDataObj.latitude, individualDataObj.longitude);
+              },
+            }}
+          >
+            <Popup style={{ fontSize: "1.1rem" }}>
+              <div className="popup" style={{ height: "250px" }}>
+                <div className="tooltipHead">
+                  <h2 style={{ marginBottom: "8px" }}>{individualDataObj.name}</h2>
+                  <button className="geoFencing">Geofencing</button>
+                </div>
+                <div className="popupInfo">
+                  <PopupElement icon={<MdLocationPin />} text={address} />
+                  <PopupElement icon={<FcAlarmClock />} text="12/07/2024 12:51:46" />
+                  <PopupElement icon={<SiGoogleearthengine />} text={individualDataObj.ignition ? "Ignition On" : "Ignition Off"} />
+                  <PopupElement icon={<FaTruck />} text={`${individualDataObj.distance} kmph`} />
+                  <PopupElement icon={<MdAccessTime />} text="12D 01H 04M" />
+                  <PopupElement icon={<FaRegSnowflake />} text="Ac off" />
+                  <PopupElement icon={<BsFillFuelPumpFill />} text="0.00 L" />
+                </div>
+              </div>
+            </Popup>
+
+          </Marker>
+          <Polyline positions={points} color="blue" />
         </MapContainer>
       </div>
 
@@ -195,12 +228,5 @@ function IndividualGooglemap({ data, setIndividualMap, individualDataObj }) {
     </>
   );
 }
-
-const PopupElement = ({ icon, text }) => (
-  <div className="popupElement">
-    <div>{icon}</div>
-    <span style={{ fontSize: "0.9rem", color: "#fff" }}>{text}</span>
-  </div>
-);
 
 export default IndividualGooglemap;

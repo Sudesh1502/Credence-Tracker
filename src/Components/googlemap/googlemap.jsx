@@ -1,141 +1,167 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { MapContainer, Marker, Polyline, Popup, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
-import useGeolocation from "../Hooks/useGeolocation";
-import markerUrl from "../googlemap/SVG/Car/C2.svg";
-import { MdLocationPin } from "react-icons/md";
 import { FcAlarmClock } from "react-icons/fc";
 import { FaTruck } from "react-icons/fa6";
-import { MdAccessTime } from "react-icons/md";
 import { FaRegSnowflake } from "react-icons/fa";
 import { BsFillFuelPumpFill } from "react-icons/bs";
 import { SiGoogleearthengine } from "react-icons/si";
 import "../googlemap/googlemap.css";
 
-// Custom marker icon
-const markerIcon = new L.Icon({
-  iconUrl: markerUrl,
+import carIcon from "./SVG/Car/C1.svg";
+import motorcycleIcon from "./SVG/Bike/bike1.svg";
+import truckIcon from "./SVG/Truck/b1.svg";
+
+
+
+import axios from "axios";
+
+import { MdLocationPin, MdAccessTime } from "react-icons/md";
+
+
+const car = new L.Icon({
+  iconUrl: carIcon,
   iconSize: [35, 45],
+  iconAnchor: [17, 45], // Adjust anchor point
+});
+const truck = new L.Icon({
+  iconUrl: truckIcon,
+  iconSize: [35, 45],
+  iconAnchor: [17, 45], // Adjust anchor point
+});
+const motorcycle = new L.Icon({
+  iconUrl: motorcycleIcon,
+  iconSize: [35, 45],
+  iconAnchor: [17, 45], // Adjust anchor point
 });
 
-// OSM provider configuration
 const osmProvider = {
-  maptiler: {
-    url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-    attribution:
-      '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-  },
+  url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+  attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
 };
 
-function GoogleMapComponent({ latitude, longitude }) {
-  const [center, setCenter] = useState({ lat: 19.9606, lng: 79.2961 });
-  const ZOOM_LEVEL = 7;
-  const mapRef = useRef();
-  const location = useGeolocation();
+const initialCenter = {
+  lat: 19.9606,
+  lng: 79.2961,
+};
 
-  const showMyLocation = () => {
-    mapRef.current.flyTo([21.128142222222223, 79.10407111111111], 18, {
+
+function GoogleMapComponent({ latitude, longitude, data}) {
+  
+
+  const [vehicleData, setVehicleData] = useState([]);
+  const [center, setCenter] = useState(initialCenter);
+  const ZOOM_LEVEL = 20;  // Maximum zoom level
+  const mapRef = useRef();
+
+
+  const showMyLocation = useCallback((lati, longi) => {
+    mapRef.current.flyTo([lati, longi], ZOOM_LEVEL, {
       animate: true,
+      duration: 2  // Duration in seconds
     });
+  }, []);
+
+  useEffect(() => {
+    const processData = async () => {
+      const fetchAddress = async (latitude, longitude) => {
+        try {
+          const response = await axios.get(
+            `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`
+          );
+          return `${response.data.address.neighbourhood || ''}, ${response.data.address.county || ''}, ${response.data.address.state || ''}, ${response.data.address.postcode || ''}, ${response.data.address.country || ''}`;
+        } catch (error) {
+          console.error("Error fetching address:", error);
+          return "N/A";
+        }
+      };
+
+      const addressPromises = data.map(async (item) => {
+        const address = await fetchAddress(item.latitude, item.longitude);
+        return {
+          ...item,
+          address,
+        };
+      });
+
+      const processedData = await Promise.all(addressPromises);
+      setVehicleData(processedData);
+    };
+
+    processData();
+  }, [data]);
+  
+  // Function to get the appropriate icon based on the category
+  const getIconByCategory = (category) => {
+    console.log(`Category: ${category}`);
+    switch (category) {
+      case 'car':
+        return car;
+      case 'truck':
+        return truck;
+      case 'motorcycle':
+        return motorcycle;
+      default:
+        return car; // Default to car icon if category is unknown
+    }
   };
 
-  function pairLatLng(latitude, longitude) {
-    // Create an array to hold the paired objects
-    const pairedArray = [];
-
-    // Loop through the arrays and create objects
-    for (let i = 0; i < latitude.length; i++) {
-      const latLngObject = [latitude[i], longitude[i]];
-      pairedArray.push(latLngObject);
-    }
-
-    return pairedArray;
-  }
-
-  const points = pairLatLng(latitude, longitude);
 
   return (
     <>
       <MapContainer
         center={center}
-        zoom={ZOOM_LEVEL}
+        zoom={7} // Initial zoom level
         ref={mapRef}
-        style={{ height: "600px", width: "1000px" }}
+        style={{ height: "500px", width: "1000px" }}
       >
-        <TileLayer
-          url={osmProvider.maptiler.url}
-          attribution={osmProvider.maptiler.attribution}
-        />
-
-        {points.map((point, index) => (
-          <Marker key={index} position={point} icon={markerIcon}>
-            <Popup style={{fontSize:"1.1rem"}}>
-              <div className="popup" style={{height:"250px"}} >
-                <h2 style={{marginBottom:"8px"}}>MH31FC1100</h2>
-                <div className="popupInfo">
-                  {/* start */}
-                  <div className="popupElement">
-                    <div><MdLocationPin style={{fontSize:"1.1rem"}}/></div>
-                    <span style={{fontSize:"0.9rem", color:"#fff"}}>
-                      10, Rajendra Nagar, Yahodha Nagar, Nagpur, Maharashtra
-                      440036, India
-                    </span>
-                  </div>
-                  {/* end  */}
-
-                  {/* start */}
-                  <div className="popupElement">
-                    <div><FcAlarmClock style={{fontSize:"1.1rem"}}/></div>
-                    <span style={{fontSize:"0.9rem", color:"#fff"}}>12/07/2024 12:51:46</span>
-                  </div>
-                  {/* end  */}
-
-                  {/* start */}
-                  <div className="popupElement">
-                    <div><SiGoogleearthengine style={{fontSize:"1.1rem"}} /></div>
-                    <span style={{fontSize:"0.9rem", color:"#fff"}}>Ignition off</span>
-                  </div>
-                  {/* end  */}
-
-                  {/* start */}
-                  <div className="popupElement">
-                    <div><FaTruck style={{fontSize:"1.1rem"}} /></div>
-                    <span style={{fontSize:"0.9rem", color:"#fff"}}>0 kmph</span>
-                  </div>
-                  {/* end  */}
-
-                  {/* start */}
-                  <div className="popupElement">
-                    <div><MdAccessTime style={{fontSize:"1.1rem"}} /></div>
-                    <span style={{fontSize:"0.9rem", color:"#fff"}}>12D 01H 04M</span>
-                  </div>
-                  {/* end  */}
-
-                  {/* start */}
-                  <div className="popupElement">
-                    <div><FaRegSnowflake style={{fontSize:"1.1rem"}} /></div>
-                    <span style={{fontSize:"0.9rem", color:"#fff"}}>Ac off</span>
-                  </div>
-                  {/* end  */}
-
-                  {/* start */}
-                  <div className="popupElement">
-                    <div><BsFillFuelPumpFill style={{fontSize:"1.1rem"}} /></div>
-                    <span style={{fontSize:"0.9rem", color:"#fff"}}>0.00 L</span>
-                  </div>
-                  {/* end  */}
-                </div>
-              </div>
-            </Popup>
-          </Marker>
-        ))}
-
+        <TileLayer url={osmProvider.url} attribution={osmProvider.attribution} />
         
+        
+        
+        {vehicleData.map((vehicle, index) =>
+          vehicle.latitude && vehicle.longitude ? (
+            <Marker
+              key={index}
+              position={[vehicle.latitude, vehicle.longitude]}
+              icon={getIconByCategory(vehicle.category)}
+              eventHandlers={{
+                click: () => {
+                  showMyLocation(vehicle.latitude, vehicle.longitude);
+                },
+              }}
+            >
+              <Popup style={{ fontSize: "1.1rem" }}>
+                <div className="popup" style={{ height: "250px" }}>
+                  <div className="tooltipHead">
+                    <h2 style={{ marginBottom: "8px" }}>{vehicle.name}</h2>
+                    <button className="geoFencing">Geofencing</button>
+                  </div>
+                  <div className="popupInfo">
+                    <PopupElement icon={<MdLocationPin />} text={vehicle.address} />
+                    <PopupElement icon={<FcAlarmClock />} text={new Date().toLocaleString()} />
+                    <PopupElement icon={<SiGoogleearthengine />} text={vehicle.ignition ? "Ignition On" : "Ignition Off"} />
+                    <PopupElement icon={<FaTruck />} text={`${vehicle.distance} kmph`} />
+                    <PopupElement icon={<MdAccessTime />} text="12D 01H 04M" />
+                    <PopupElement icon={<FaRegSnowflake />} text="Ac off" />
+                    <PopupElement icon={<BsFillFuelPumpFill />} text="0.00 L" />
+                  </div>
+                </div>
+              </Popup>
+            </Marker>
+          ) : null
+        )}
       </MapContainer>
-      <button onClick={showMyLocation}>Show My Location</button>
     </>
   );
 }
+
+const PopupElement = ({ icon, text }) => (
+  <div className="popupElement">
+    <div>{icon}</div>
+    <span style={{ fontSize: "0.9rem", color: "#fff" }}>{text}</span>
+  </div>
+);
 
 export default GoogleMapComponent;

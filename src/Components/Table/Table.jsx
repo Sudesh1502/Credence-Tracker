@@ -509,7 +509,7 @@ export const Tablee = ({ data }) => {
         {individualMap ? (
           <IndividualGooglemap latitude={latitude} longitude={longitude} setIndividualMap = {setIndividualMap} style={{width:"100%"}}  data={data} individualDataObj={individualDataObj}/>
         ) : (
-          <GoogleMapComponent latitude={latitude} longitude={longitude} />
+          <GoogleMapComponent latitude={latitude} longitude={longitude} data={data} />
         )}
 
         <br />

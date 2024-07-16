@@ -15,7 +15,7 @@ import BatteryFullIcon from '@mui/icons-material/BatteryFull';
 import moment from 'moment-timezone';
 
 // Define a component to fetch and display the address
-const AddressFetcher = ({ lat, lng }) => {
+export const AddressFetcher = ({ lat, lng }) => {
   const [address, setAddress] = useState('');
 
   useEffect(() => {
