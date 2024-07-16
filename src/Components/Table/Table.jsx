@@ -328,7 +328,13 @@ export const Tablee = ({ data }) => {
   return (
     <>
       <div style={{ marginTop: "75px" }}>
-        <div style={{ display: "flex", gap: "16px" }}>
+        {
+          individualMap 
+          ?
+          <></>
+          :
+          <>
+          <div style={{ display: "flex", gap: "16px" }}>
           <FormControl
             variant="outlined"
             fullWidth
@@ -496,6 +502,8 @@ export const Tablee = ({ data }) => {
             </Select>
           </FormControl>
         </div>
+          </>
+        }
 
         {/* GoogleMaps */}
         {individualMap ? (

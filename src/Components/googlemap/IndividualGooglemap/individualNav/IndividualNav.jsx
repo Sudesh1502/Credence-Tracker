@@ -1,7 +1,7 @@
 import "./IndividualNav.css";
 import Button from "@mui/material/Button";
 
-const IndividualNav = ({ setIndividualMap, setShowPlayBar }) => {
+const IndividualNav = ({ setIndividualMap, setShowPlayBar, individualDataObj}) => {
   const handleClose = () => {
     setIndividualMap(false);
   };
@@ -12,7 +12,7 @@ const IndividualNav = ({ setIndividualMap, setShowPlayBar }) => {
 
   return (
     <div className="individualNav">
-      <div className="carNumber">MH31FC1100</div>
+      <div className="carNumber">{`${individualDataObj.name}`}</div>
       <div className="carInfo">
         <Button
           variant="contained"

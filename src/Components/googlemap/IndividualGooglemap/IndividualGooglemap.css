@@ -1,3 +1,6 @@
+.DateRangePicker_picker__directionLeft {
+    z-index: 9999 !important;
+}
 .mapContainer{
     display: flex;
     align-items: center;

@@ -5,7 +5,9 @@ import L from "leaflet";
 import IndividualNav from "./individualNav/IndividualNav.jsx";
 import IndividualInfo from "./IndividualInfo/IndividualInfo";
 import PlayBar from "./PlayBar/PlayBar.jsx";
-import markerUrl from "../SVG/Car/C1.svg";
+import carIcon from "../SVG/Car/C1.svg";
+import motorcycleIcon from "../SVG/Bike/bike1.svg";
+import truckIcon from "../SVG/Truck/b1.svg";
 import "leaflet-fullscreen/dist/Leaflet.fullscreen";
 import axios from "axios";
 
@@ -17,9 +19,25 @@ import { BsFillFuelPumpFill } from "react-icons/bs";
 import "./IndividualGooglemap.css";
 import BottomSlider from "./BottomSlider/BottomSlider.jsx";
 
-const markerIcon = new L.Icon({
-  iconUrl: markerUrl,
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { LocalizationProvider } from '@mui/x-date-pickers-pro/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
+import { DateTimeRangePicker } from '@mui/x-date-pickers-pro/DateTimeRangePicker';
+
+const car = new L.Icon({
+  iconUrl: carIcon,
   iconSize: [35, 45],
+  iconAnchor: [17, 45], // Adjust anchor point
+});
+const truck = new L.Icon({
+  iconUrl: truckIcon,
+  iconSize: [35, 45],
+  iconAnchor: [17, 45], // Adjust anchor point
+});
+const motorcycle = new L.Icon({
+  iconUrl: motorcycleIcon,
+  iconSize: [35, 45],
+  iconAnchor: [17, 45], // Adjust anchor point
 });
 
 const osmProvider = {
@@ -32,7 +50,7 @@ const initialCenter = {
   lng: 79.2961,
 };
 
-function IndividualGooglemap({ data, setIndividualMap,individualDataObj }) {
+function IndividualGooglemap({ data, setIndividualMap, individualDataObj }) {
   const [showPlayBar, setShowPlayBar] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [vehicleData, setVehicleData] = useState([]);
@@ -82,6 +100,7 @@ function IndividualGooglemap({ data, setIndividualMap,individualDataObj }) {
             ignition: item.ignition,
             latitude: item.latitude,
             longitude: item.longitude,
+            category: item.category,
           };
         })
       );
@@ -90,8 +109,29 @@ function IndividualGooglemap({ data, setIndividualMap,individualDataObj }) {
     processData();
   }, [data]);
 
+  // Function to get the appropriate icon based on the category
+  const getIconByCategory = (category) => {
+    console.log(`Category: ${category}`);
+    switch (category) {
+      case 'car':
+        return car;
+      case 'truck':
+        return truck;
+      case 'motorcycle':
+        return motorcycle;
+      default:
+        return car; // Default to car icon if category is unknown
+    }
+  };
+
   return (
     <>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DemoContainer components={['DateTimeRangePicker']}>
+          <DateTimeRangePicker localeText={{ start: 'Check-in', end: 'Check-out' }} />
+        </DemoContainer>
+      </LocalizationProvider>
+
       <div className="mapContainer">
         <MapContainer
           center={center}
@@ -106,9 +146,10 @@ function IndividualGooglemap({ data, setIndividualMap,individualDataObj }) {
               <Marker
                 key={index}
                 position={[vehicle.latitude, vehicle.longitude]}
-                icon={markerIcon}
+                icon={getIconByCategory(vehicle.category)}
                 eventHandlers={{
                   click: () => {
+                    console.log(vehicle);
                     showMyLocation(vehicle.latitude, vehicle.longitude);
                   },
                 }}
@@ -141,6 +182,7 @@ function IndividualGooglemap({ data, setIndividualMap,individualDataObj }) {
           <IndividualNav
             setIndividualMap={setIndividualMap}
             setShowPlayBar={setShowPlayBar}
+            individualDataObj={individualDataObj}
           />
         )}
         {showPlayBar ? (
