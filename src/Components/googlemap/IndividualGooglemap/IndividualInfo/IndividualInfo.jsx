@@ -23,7 +23,8 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-const CustomGrid = () => {
+const CustomGrid = ({ individualDataObj }) => {
+  console.log("individualDataObj " + individualDataObj[0])
   return (
     <Box sx={{ flexGrow: 1 }} className="indiviudalInfo">
       <Grid container spacing={2} columns={5}>
@@ -35,11 +36,10 @@ const CustomGrid = () => {
               </div>
               <div className="info">
                 <p className="infoHead">Speed</p>
-                <p className="infoData">0 kmph</p>
+                <p className="infoData">{`${individualDataObj.speed ?? 'N/A'} kmph`}</p>
               </div>
             </div>
           </Item>
-          
         </Grid>
         <Grid item xs={1}>
           <Item className="Infocontainer">
@@ -49,11 +49,10 @@ const CustomGrid = () => {
               </div>
               <div className="info">
                 <p className="infoHead">Odometer</p>
-                <p className="infoData">1315</p>
+                <p className="infoData">{`${individualDataObj.attributes?.totalDistance ?? 'N/A'}`}</p>
               </div>
             </div>
           </Item>
-          
         </Grid>
         <Grid item xs={1}>
           <Item>
@@ -63,11 +62,10 @@ const CustomGrid = () => {
               </div>
               <div className="info">
                 <p className="infoHead">Total Distance</p>
-                <p className="infoData">0 km</p>
+                <p className="infoData">{`${individualDataObj.attributes?.totalDistance ?? 'N/A'} km`}</p>
               </div>
             </div>
           </Item>
-          
         </Grid>
         <Grid item xs={1}>
           <Item>
@@ -81,7 +79,6 @@ const CustomGrid = () => {
               </div>
             </div>
           </Item>
-          
         </Grid>
         <Grid item xs={1}>
           <Item>
@@ -91,11 +88,10 @@ const CustomGrid = () => {
               </div>
               <div className="info">
                 <p className="infoHead">Distance from last stop</p>
-                <p className="infoData">0.0 km</p>
+                <p className="infoData">{`${individualDataObj.attributes?.distance ?? 'N/A'} km`}</p>
               </div>
             </div>
           </Item>
-          
         </Grid>
         <Grid item xs={1}>
           <Item>
@@ -105,11 +101,10 @@ const CustomGrid = () => {
               </div>
               <div className="info">
                 <p className="infoHead">Duration from last stop</p>
-                <p className="infoData">05:21</p>
+                <p className="infoData">{`${individualDataObj.lastUpdate ?? 'N/A'}`}</p>
               </div>
             </div>
           </Item>
-          
         </Grid>
         <Grid item xs={1}>
           <Item>
@@ -119,11 +114,10 @@ const CustomGrid = () => {
               </div>
               <div className="info">
                 <p className="infoHead">Co-ordinates</p>
-                <p className="infoData">21.11889,79.02614</p>
+                <p className="infoData">{`${individualDataObj.latitude ?? 'N/A'}, ${individualDataObj.longitude ?? 'N/A'}`}</p>
               </div>
             </div>
           </Item>
-          
         </Grid>
         <Grid item xs={1}>
           <Item>
@@ -133,11 +127,10 @@ const CustomGrid = () => {
               </div>
               <div className="info">
                 <p className="infoHead">Last Update</p>
-                <p className="infoData">10/07/2024 17:14:01</p>
+                <p className="infoData">{`${individualDataObj.lastUpdate ?? 'N/A'}`}</p>
               </div>
             </div>
           </Item>
-          
         </Grid>
         <Grid item xs={1}>
           <Item>
@@ -151,9 +144,8 @@ const CustomGrid = () => {
               </div>
             </div>
           </Item>
-          
         </Grid>
-        <Grid item xs={1} style={{width:'200px'}}>
+        <Grid item xs={1} style={{ width: '200px' }}>
           <Item>
             <div className="gridDiv">
               <div className="icon">
@@ -165,7 +157,6 @@ const CustomGrid = () => {
               </div>
             </div>
           </Item>
-          
         </Grid>
       </Grid>
     </Box>

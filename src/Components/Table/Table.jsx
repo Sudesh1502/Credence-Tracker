@@ -58,7 +58,9 @@ const style = {
 };
 
 export const Tablee = ({ data }) => {
+  console.log(data);
   const [page, setPage] = useState(0);
+  const [individualDataObj,setIndividualDataObj] = useState({});
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [filterText, setFilterText] = useState("");
   const [filteredRows, setFilteredRows] = useState(
@@ -250,6 +252,17 @@ export const Tablee = ({ data }) => {
     setLongi (longitude);
     
   };
+
+  
+  const handleData = (dataLat,dataLng,data) =>{
+    for(let i = 0; i < data.length; i++){
+      if(data[i].latitude === dataLat && data[i].longitude === dataLng){
+        setIndividualDataObj( data[i]);
+        console.log(data[i]);
+        
+      }
+    }
+  }
 
   const handleExport = () => {
     const dataToExport = filteredRows.map((row) => {
@@ -486,7 +499,7 @@ export const Tablee = ({ data }) => {
 
         {/* GoogleMaps */}
         {individualMap ? (
-          <IndividualGooglemap latitude={latitude} longitude={longitude} setIndividualMap = {setIndividualMap} style={{width:"100%"}}  data={data}/>
+          <IndividualGooglemap latitude={latitude} longitude={longitude} setIndividualMap = {setIndividualMap} style={{width:"100%"}}  data={data} individualDataObj={individualDataObj}/>
         ) : (
           <GoogleMapComponent latitude={latitude} longitude={longitude} />
         )}
@@ -681,7 +694,8 @@ export const Tablee = ({ data }) => {
                               onClick={() => {
 
                                 if (column.accessor === "location") {
-                                 
+                                  handleData(row.latitude, row.longitude, data);
+                                  
                                   handleLocationClick(row.latitude, row.longitude)
                                   
                                 } else if (column.accessor === "name") {

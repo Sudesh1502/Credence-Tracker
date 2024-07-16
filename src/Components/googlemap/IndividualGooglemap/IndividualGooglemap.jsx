@@ -32,7 +32,7 @@ const initialCenter = {
   lng: 79.2961,
 };
 
-function IndividualGooglemap({ data, setIndividualMap }) {
+function IndividualGooglemap({ data, setIndividualMap,individualDataObj }) {
   const [showPlayBar, setShowPlayBar] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [vehicleData, setVehicleData] = useState([]);
@@ -146,7 +146,7 @@ function IndividualGooglemap({ data, setIndividualMap }) {
         {showPlayBar ? (
           <PlayBar setShowPlayBar={setShowPlayBar} />
         ) : (
-          <IndividualInfo />
+          <IndividualInfo individualDataObj={individualDataObj} />
         )}
         <BottomSlider />
       </div>
