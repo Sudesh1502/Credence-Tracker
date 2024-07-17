@@ -23,21 +23,23 @@ import { MdLocationPin, MdAccessTime } from "react-icons/md";
 const car = new L.Icon({
   iconUrl: carIcon,
   iconSize: [35, 45],
-  iconAnchor: [17, 45], // Adjust anchor point
+  iconAnchor: [17, 45],
+  popupAnchor: [0, -30]
 });
 const truck = new L.Icon({
   iconUrl: truckIcon,
   iconSize: [35, 45],
-  iconAnchor: [17, 45], // Adjust anchor point
+  iconAnchor: [17, 45],
+  popupAnchor: [0, -30]
 });
 const motorcycle = new L.Icon({
   iconUrl: motorcycleIcon,
   iconSize: [35, 45],
-  iconAnchor: [17, 45], // Adjust anchor point
+  iconAnchor: [17, 45],
+  popupAnchor: [0, -30]
 });
-
 const osmProvider = {
-  url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+  url: "https://api.maptiler.com/maps/streets-v2/256/{z}/{x}/{y}.png?key=jXbNOuobzSRdq08XiuKY",
   attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
 };
 
@@ -132,7 +134,7 @@ function GoogleMapComponent({ latitude, longitude, data}) {
                 },
               }}
             >
-              <Popup style={{ fontSize: "1.1rem" }}>
+              <Popup offset={[0, 0]} style={{ zIndex: 300 }}>
                 <div className="popup" style={{ height: "250px" }}>
                   <div className="tooltipHead">
                     <h2 style={{ marginBottom: "8px" }}>{vehicle.name}</h2>

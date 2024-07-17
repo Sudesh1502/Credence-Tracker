@@ -24,10 +24,10 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 const CustomGrid = ({ individualDataObj }) => {
-  console.log("individualDataObj " + individualDataObj[0])
+  // console.log("individualDataObj " + individualDataObj[0])
   return (
     <Box sx={{ flexGrow: 1 }} className="indiviudalInfo">
-      <Grid container spacing={2} columns={5}>
+      <Grid container spacing={2} columns={4}>
         <Grid item xs={1}>
           <Item className="Infocontainer">
             <div className="gridDiv">
@@ -41,7 +41,7 @@ const CustomGrid = ({ individualDataObj }) => {
             </div>
           </Item>
         </Grid>
-        <Grid item xs={1}>
+        {/* <Grid item xs={1}>
           <Item className="Infocontainer">
             <div className="gridDiv">
               <div className="icon">
@@ -66,7 +66,7 @@ const CustomGrid = ({ individualDataObj }) => {
               </div>
             </div>
           </Item>
-        </Grid>
+        </Grid> */}
         <Grid item xs={1}>
           <Item>
             <div className="gridDiv">

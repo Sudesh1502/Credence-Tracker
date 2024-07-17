@@ -58,7 +58,7 @@ const style = {
 };
 
 export const Tablee = ({ data }) => {
-  console.log(data);
+  // console.log(data);
   const [page, setPage] = useState(0);
   const [individualDataObj,setIndividualDataObj] = useState({});
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -258,7 +258,7 @@ export const Tablee = ({ data }) => {
     for(let i = 0; i < data.length; i++){
       if(data[i].latitude === dataLat && data[i].longitude === dataLng){
         setIndividualDataObj( data[i]);
-        console.log(data[i]);
+        // console.log(data[i]);
         
       }
     }

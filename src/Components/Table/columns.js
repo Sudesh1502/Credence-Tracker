@@ -131,7 +131,7 @@ export const COLUMNS = [
     },
   },
   {
-    Header: 'Address                                            .',
+    Header: 'Address',
     accessor: 'kjn',
     Cell: ({ row }) => {
       
@@ -140,14 +140,14 @@ export const COLUMNS = [
       
     },
   },
-  {
-    Header: 'Latitude',
-    accessor: 'latitude',
-  },
-  {
-    Header: 'Longitude',
-    accessor: 'longitude',
-  },
+  // {
+  //   Header: 'Latitude',
+  //   accessor: 'latitude',
+  // },
+  // {
+  //   Header: 'Longitude',
+  //   accessor: 'longitude',
+  // },
   {
     Header: 'Speed(KM)',
     accessor: 'speed'
@@ -162,16 +162,16 @@ export const COLUMNS = [
       );
     },
   },
-  {
-    Header: 'Total Distance(KM)',
-    accessor: row => row.attributes?.totalDistance ?? null,
-    Cell: ({ row }) => {
-      const mileage = row.attributes?.totalDistance;
-      return (
-        <span>{typeof mileage === 'number' ? mileage.toFixed(2) : 'N/A'}</span>
-      );
-    },
-  },
+  // {
+  //   Header: 'Total Distance(KM)',
+  //   accessor: row => row.attributes?.totalDistance ?? null,
+  //   Cell: ({ row }) => {
+  //     const mileage = row.attributes?.totalDistance;
+  //     return (
+  //       <span>{typeof mileage === 'number' ? mileage.toFixed(2) : 'N/A'}</span>
+  //     );
+  //   },
+  // },
   {
     Header: 'Status',
     accessor: 'status'

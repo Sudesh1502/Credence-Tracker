@@ -10,7 +10,6 @@ import motorcycleIcon from "../SVG/Bike/bike1.svg";
 import truckIcon from "../SVG/Truck/b1.svg";
 import "leaflet-fullscreen/dist/Leaflet.fullscreen";
 import axios from "axios";
-
 import { MdLocationPin, MdAccessTime } from "react-icons/md";
 import { FcAlarmClock } from "react-icons/fc";
 import { SiGoogleearthengine } from "react-icons/si";
@@ -18,30 +17,34 @@ import { FaTruck, FaRegSnowflake } from "react-icons/fa";
 import { BsFillFuelPumpFill } from "react-icons/bs";
 import "./IndividualGooglemap.css";
 import BottomSlider from "./BottomSlider/BottomSlider.jsx";
-
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers-pro/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 import { DateTimeRangePicker } from '@mui/x-date-pickers-pro/DateTimeRangePicker';
+import dayjs from 'dayjs';
+import GeoFencing from "../../GeoFencing/GeoFencing.jsx";
 
 const car = new L.Icon({
   iconUrl: carIcon,
   iconSize: [35, 45],
-  iconAnchor: [17, 45], // Adjust anchor point
+  iconAnchor: [17, 45],
+  popupAnchor: [0, -30]
 });
 const truck = new L.Icon({
   iconUrl: truckIcon,
   iconSize: [35, 45],
-  iconAnchor: [17, 45], // Adjust anchor point
+  iconAnchor: [17, 45],
+  popupAnchor: [0, -30]
 });
 const motorcycle = new L.Icon({
   iconUrl: motorcycleIcon,
   iconSize: [35, 45],
-  iconAnchor: [17, 45], // Adjust anchor point
+  iconAnchor: [17, 45],
+  popupAnchor: [0, -30]
 });
 
 const osmProvider = {
-  url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+  url: "https://api.maptiler.com/maps/streets-v2/256/{z}/{x}/{y}.png?key=jXbNOuobzSRdq08XiuKY",
   attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
 };
 
@@ -50,7 +53,6 @@ const initialCenter = {
   lng: 79.2961,
 };
 
-// PopupElement component moved here
 const PopupElement = ({ icon, text }) => (
   <div className="popupElement">
     <div>{icon}</div>
@@ -62,18 +64,30 @@ function IndividualGooglemap({ data, setIndividualMap, individualDataObj }) {
   const [showPlayBar, setShowPlayBar] = useState(false);
   const [center, setCenter] = useState(initialCenter);
   const [address, setAddress] = useState("N/A");
-  const ZOOM_LEVEL = 20;  // Maximum zoom level
+  const ZOOM_LEVEL = 20;
   const mapRef = useRef();
-  const [startTime, setStartTime] = useState();
-  const [stopTime, setStopTime] = useState();
+  const [startDateTime, setStartDateTime] = useState(null);
+  const [endDateTime, setEndDateTime] = useState(null);
   const [playbackData, setPlaybackData] = useState();
   const [wait, setWait] = useState('');
-  const [clicked, setClicked] =useState(false);
+  const [clicked, setClicked] = useState(false);
+  const [animatedMarkerPosition, setAnimatedMarkerPosition] = useState(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCount(prevCount => prevCount + 1);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const showMyLocation = useCallback((lati, longi) => {
     mapRef.current.flyTo([lati, longi], ZOOM_LEVEL, {
       animate: true,
-      duration: 2  // Duration in seconds
+      duration: 2
     });
   }, []);
 
@@ -89,52 +103,43 @@ function IndividualGooglemap({ data, setIndividualMap, individualDataObj }) {
     }
   };
 
-
-  //Getting playback data
- const fetchPlaybackData = async () => {
-  setClicked(true);
-try {
-  const username = "hbgadget221@gmail.com"; // Replace with your actual username
-  const password = "123456"; // Replace with your actual password
-  const token = btoa(`${username}:${password}`); // Base64 encode the username and password
-  const response1 = await axios.get(`
-    https://rocketsalestracker.com/api/positions?deviceId=1685&from=2024-07-14T18:30:00.000Z&to=2024-07-15T18:29:59.999Z`,
-    {
-      headers: {
-        Authorization: `Basic ${token}`, // Replace with your actual token
-      },
+  const fetchPlaybackData = async () => {
+    setClicked(true);
+    try {
+      const username = "hbgadget221@gmail.com";
+      const password = "123456";
+      const token = btoa(`${username}:${password}`);
+      const response1 = await axios.get(`
+        https://rocketsalestracker.com/api/positions?deviceId=${individualDataObj.deviceId}&from=${startDateTime}&to=${endDateTime}`,
+        {
+          headers: {
+            Authorization: `Basic ${token}`,
+          },
+        }
+      );
+      setPlaybackData(response1.data);
+    } catch (error) {
+      console.error("Error fetching device data:", error);
     }
-  );
-  console.log(response1);
-  setPlaybackData(response1.data); // Update state variable with device API data
-} catch (error) {
-  console.error("Error fetching device data:", error);
-}
-};
-console.log("playback value", playbackData);
-// console.log("playback latitude",playbackData.latitude);
+  };
 
-const pairedArray = [];
+  useEffect(() => {
+    if (playbackData === undefined && clicked) {
+      setWait('Please wait while the API loads...');
+    } else {
+      setWait('');
+    }
+  }, [playbackData]);
 
-useEffect(() => {
-if (playbackData === undefined && clicked) {
-  setWait('Please wait while the API loads...');
-} else {
-  setWait('');
-}
-}, [playbackData]);
+  const pairedArray = playbackData ? playbackData.map(row => [row.latitude, row.longitude]) : [];
 
-if(playbackData !==undefined){
-playbackData.map((row)=>{
-const latLngObject = [row.latitude, row.longitude];
-pairedArray.push(latLngObject);})}
+  const handleDateTimeChange = (newValue) => {
+    const formattedStartDateTime = newValue[0] ? dayjs(newValue[0]).toISOString() : null;
+    const formattedEndDateTime = newValue[1] ? dayjs(newValue[1]).toISOString() : null;
 
-console.log("pairedArray", pairedArray);
-
-const points = pairedArray;
-
-
-
+    setStartDateTime(formattedStartDateTime);
+    setEndDateTime(formattedEndDateTime);
+  };
 
   useEffect(() => {
     const updateAddress = async () => {
@@ -144,9 +149,7 @@ const points = pairedArray;
     updateAddress();
   }, [individualDataObj]);
 
-  // Function to get the appropriate icon based on the category
   const getIconByCategory = (category) => {
-    console.log(`Category: ${category}`);
     switch (category) {
       case 'car':
         return car;
@@ -155,24 +158,60 @@ const points = pairedArray;
       case 'motorcycle':
         return motorcycle;
       default:
-        return car; // Default to car icon if category is unknown
+        return car;
     }
   };
+
+  const startAnimation = () => {
+    setIsAnimating(true);
+  };
+
+  useEffect(() => {
+    let interval;
+    if (isAnimating && pairedArray.length > 0) {
+      setAnimatedMarkerPosition(pairedArray[0]);
+      interval = setInterval(() => {
+        setCurrentIndex((prevIndex) => {
+          const newIndex = prevIndex + 1;
+          if (newIndex < pairedArray.length) {
+            setAnimatedMarkerPosition(pairedArray[newIndex]);
+            return newIndex;
+          } else {
+            clearInterval(interval);
+            setIsAnimating(false);
+            return prevIndex;
+          }
+        });
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [isAnimating, count]);
 
   return (
     <>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DemoContainer components={['DateTimeRangePicker']}>
-          <DateTimeRangePicker localeText={{ start: 'Check-in', end: 'Check-out' }} />
+          <DateTimeRangePicker
+            localeText={{ start: 'Check-in', end: 'Check-out' }}
+            value={[startDateTime ? dayjs(startDateTime) : null, endDateTime ? dayjs(endDateTime) : null]}
+            onChange={handleDateTimeChange}
+          />
         </DemoContainer>
+        <div>
+          <p>Start DateTime: {startDateTime}</p>
+          <p>End DateTime: {endDateTime}</p>
+        </div>
       </LocalizationProvider>
 
-      <button onClick={() =>fetchPlaybackData()}>Get Playback</button>
+      <button onClick={fetchPlaybackData}>Get Playback</button>
       <div>{wait}</div>
+      {playbackData && (
+        <button onClick={startAnimation}>Start Animation</button>
+      )}
       <div className="mapContainer">
         <MapContainer
           center={center}
-          zoom={7}  // Initial zoom level
+          zoom={7}
           ref={mapRef}
           style={{ height: "500px", width: "75vw" }}
         >
@@ -191,7 +230,7 @@ const points = pairedArray;
               <div className="popup" style={{ height: "250px" }}>
                 <div className="tooltipHead">
                   <h2 style={{ marginBottom: "8px" }}>{individualDataObj.name}</h2>
-                  <button className="geoFencing">Geofencing</button>
+                  <GeoFencing />
                 </div>
                 <div className="popupInfo">
                   <PopupElement icon={<MdLocationPin />} text={address} />
@@ -204,9 +243,14 @@ const points = pairedArray;
                 </div>
               </div>
             </Popup>
-
           </Marker>
-          <Polyline positions={points} color="blue" />
+          {animatedMarkerPosition && (
+            <Marker
+              position={animatedMarkerPosition}
+              icon={getIconByCategory(individualDataObj.category)}
+            />
+          )}
+          <Polyline positions={pairedArray} color="blue" />
         </MapContainer>
       </div>
 
