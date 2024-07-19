@@ -6,8 +6,8 @@ import { FcAlarmClock } from "react-icons/fc";
 import { FaTruck } from "react-icons/fa6";
 import { FaRegSnowflake } from "react-icons/fa";
 import { BsFillFuelPumpFill } from "react-icons/bs";
-import { SiGoogleearthengine } from "react-icons/si";
 import "../googlemap/googlemap.css";
+import { PiPlugsFill } from "react-icons/pi";
 
 import carIcon from "./SVG/Car/C1.svg";
 import motorcycleIcon from "./SVG/Bike/bike1.svg";
@@ -18,6 +18,7 @@ import truckIcon from "./SVG/Truck/b1.svg";
 import axios from "axios";
 
 import { MdLocationPin, MdAccessTime } from "react-icons/md";
+import GeoFencing from "../GeoFencing/GeoFencing";
 
 
 const car = new L.Icon({
@@ -51,6 +52,8 @@ const initialCenter = {
 
 function GoogleMapComponent({ latitude, longitude, data}) {
   
+  const [error, setError] = useState('');
+  const [address, setAddress] = useState("");
 
   const [vehicleData, setVehicleData] = useState([]);
   const [center, setCenter] = useState(initialCenter);
@@ -68,16 +71,19 @@ function GoogleMapComponent({ latitude, longitude, data}) {
   useEffect(() => {
     const processData = async () => {
       const fetchAddress = async (latitude, longitude) => {
+        const apiKey = 'AIzaSyAvHHoPKPwRFui0undeEUrz00-8w6qFtik';
+        const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}`;
+      
         try {
-          const response = await axios.get(
-            `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`
-          );
-          return `${response.data.address.neighbourhood || ''}, ${response.data.address.county || ''}, ${response.data.address.state || ''}, ${response.data.address.postcode || ''}, ${response.data.address.country || ''}`;
+          const response = await axios.get(url);
+          const formattedAddress = response.data.results[0]?.formatted_address || 'Address not found';
+          return formattedAddress;
         } catch (error) {
-          console.error("Error fetching address:", error);
-          return "N/A";
+          setError(error.message);
+          return 'Error fetching address';
         }
       };
+      
 
       const addressPromises = data.map(async (item) => {
         const address = await fetchAddress(item.latitude, item.longitude);
@@ -134,20 +140,24 @@ function GoogleMapComponent({ latitude, longitude, data}) {
                 },
               }}
             >
-              <Popup offset={[0, 0]} style={{ zIndex: 300 }}>
+              <Popup offset={[0, 0]} style={{ zIndex: 300, fontSize: "1.1rem", color:"black"}}>
                 <div className="popup" style={{ height: "250px" }}>
-                  <div className="tooltipHead">
-                    <h2 style={{ marginBottom: "8px" }}>{vehicle.name}</h2>
-                    <button className="geoFencing">Geofencing</button>
+                <div className="tooltipHead" style={{ marginBottom: "8px" }}>
+                  <div className="tooltipNamePlate">
+                    <div className="ind"><p>IND</p></div>
+                    <div className="name"><p >{vehicle.name}</p></div>
                   </div>
+                  
+                  <GeoFencing />
+                </div >
                   <div className="popupInfo">
-                    <PopupElement icon={<MdLocationPin />} text={vehicle.address} />
-                    <PopupElement icon={<FcAlarmClock />} text={new Date().toLocaleString()} />
-                    <PopupElement icon={<SiGoogleearthengine />} text={vehicle.ignition ? "Ignition On" : "Ignition Off"} />
-                    <PopupElement icon={<FaTruck />} text={`${vehicle.distance} kmph`} />
-                    <PopupElement icon={<MdAccessTime />} text="12D 01H 04M" />
-                    <PopupElement icon={<FaRegSnowflake />} text="Ac off" />
-                    <PopupElement icon={<BsFillFuelPumpFill />} text="0.00 L" />
+                    <PopupElement icon={<MdLocationPin style={{color:"#d53131"}} />} text={vehicle.address} />
+                    <PopupElement icon={<FcAlarmClock style={{color:"#f8a34c"}} />} text={new Date().toLocaleString()} />
+                    <PopupElement icon={<PiPlugsFill style={{color:"#ff7979"}} />} text={vehicle.ignition ? "Ignition On" : "Ignition Off"} />
+                    <PopupElement icon={<FaTruck  style={{color:"#ecc023"}}/>} text={`${vehicle.distance} kmph`} />
+                    <PopupElement icon={<MdAccessTime style={{color:"#74f27e"}} />} text="12D 01H 04M" />
+                    {/* <PopupElement icon={<FaRegSnowflake style={{color:"#aa9d6f"}} />} text="Ac off" /> */}
+                    <PopupElement icon={<BsFillFuelPumpFill style={{color:"#5fb1fe"}} />} text="0.00 L" />
                   </div>
                 </div>
               </Popup>
@@ -162,7 +172,7 @@ function GoogleMapComponent({ latitude, longitude, data}) {
 const PopupElement = ({ icon, text }) => (
   <div className="popupElement">
     <div>{icon}</div>
-    <span style={{ fontSize: "0.9rem", color: "#fff" }}>{text}</span>
+    <span style={{ fontSize: "0.9rem", color: "black" }}>{text}</span>
   </div>
 );
 

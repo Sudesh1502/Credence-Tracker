@@ -5,14 +5,27 @@ import { FaFastBackward, FaPlay } from "react-icons/fa";
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SpeedIcon from '@mui/icons-material/Speed';
 
-const PlayBar = ({setShowPlayBar}) => {
+const PlayBar = ({
+    setShowPlayBar,
+    setIsCalender,
+    setIsPlaybacking,
+    startAnimation,
+    currentIndex,
+    pairedArray,
+    setProgress,
+    progress,
+    setCurrentIndex,
+    setIsAnimating, 
+    isAnimating
+}) => {
 
 
     const [isPlaying, setIsPlaying] = useState(false);
-    const [progress, setProgress] = useState(0);
+    
   
     const togglePlay = () => {
       setIsPlaying(!isPlaying);
+      startAnimation();
     };
   
     const handleProgressChange = (event) => {
@@ -21,6 +34,9 @@ const PlayBar = ({setShowPlayBar}) => {
 
     const handleCutHistory = () => {
         setShowPlayBar(false);
+        setIsCalender(false);
+        setIsPlaybacking(false);
+        setIsAnimating(false);
     }
   
     useEffect(() => {
@@ -31,37 +47,45 @@ const PlayBar = ({setShowPlayBar}) => {
       }
     }, [progress]);
     
+    useEffect(() => {
+        if (!isPlaying) return;
+        const interval = setInterval(() => {
+            isAnimating && setProgress((currentIndex / (pairedArray.length - 1)) * 100);
+        }, 1000);
+        return () => clearInterval(interval);
+    }, [currentIndex, pairedArray.length, isPlaying]);
 
 
 
   return (
     <div className="container">
-    <div className="playbar-container">
-        <button className="playBar-btn">
-            <FilterAltIcon />
-        </button>
-        <button className="playBar-btn">
-            <FaFastBackward />
-        </button>
-        <button className="play-pause-btn playBar-btn" onClick={togglePlay}>
-            {isPlaying ? <FaPause /> : <FaPlay />}
-        </button>
-        <input
-            type="range"
-            min={0}
-            max={100}
-            value={progress}
-            id="progress-bar"
-            onChange={handleProgressChange}
-        />
-        <button className="playBar-btn">
-            <FaForward />
-        </button>
-        <button className="playBar-btn">
-            <SpeedIcon />
-        </button>
-        <button className="cutHistory" onClick={handleCutHistory}>X</button>
-    </div>
+            <div className="playbar-container">
+                <button className="playBar-btn">
+                    <FilterAltIcon />
+                </button>
+                <button className="playBar-btn">
+                    <FaFastBackward />
+                </button>
+                <button className="play-pause-btn playBar-btn" onClick={togglePlay}>
+                    {isPlaying ? <FaPause /> : <FaPlay />}
+                </button>
+                <input
+                    type="range"
+                    min={0}
+                    max={100}
+                    value={progress}
+                    id="progress-bar"
+                    onChange={handleProgressChange}
+                />
+                <span className="progress-percentage"><b>{(progress).toFixed(2)}/100</b></span>
+                <button className="playBar-btn">
+                    <FaForward />
+                </button>
+                <button className="playBar-btn">
+                    <SpeedIcon />
+                </button>
+                <button className="cutHistory" onClick={handleCutHistory}>X</button>
+            </div>
 
     <br /><br />
 

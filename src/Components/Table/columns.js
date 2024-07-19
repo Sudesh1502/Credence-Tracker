@@ -17,27 +17,40 @@ import moment from 'moment-timezone';
 // Define a component to fetch and display the address
 export const AddressFetcher = ({ lat, lng }) => {
   const [address, setAddress] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const fetchAddress = async () => {
+    const fetchAddress = async (latitude, longitude) => {
+      if (!latitude || !longitude) return;
+
+      setLoading(true);
+      const apiKey = 'AIzaSyAvHHoPKPwRFui0undeEUrz00-8w6qFtik';
+      const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}`;
+  
       try {
-        const response = await axios.get(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`);
-        const fetchedAddress = `${response.data.address.neighbourhood}, ${response.data.address.county}, ${response.data.address.state}, ${response.data.address.postcode}, ${response.data.address.country}`;
-        // console.log(fetchedAddress) // Accessing the formatted address
-        setAddress(fetchedAddress); // Updating the address state
+        const response = await axios.get(url);
+        if (response.data.results.length > 0) {
+          setAddress(response.data.results[0].formatted_address);
+        } else {
+          setAddress('Address not found');
+        }
       } catch (error) {
-        console.error("Error fetching address:", error);
-        setAddress('Error fetching address');
+        setError('Error fetching address');
+      } finally {
+        setLoading(false);
       }
     };
 
-    if (lat && lng) {
-      fetchAddress();
-    }
+    fetchAddress(lat, lng);
   }, [lat, lng]);
+
+  if (loading) return <span>Loading...</span>;
+  if (error) return <span>{error}</span>;
 
   return <span>{address}</span>;
 };
+
 // Define your columns array
 export const COLUMNS = [
   {

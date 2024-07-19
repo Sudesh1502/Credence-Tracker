@@ -1,13 +1,15 @@
 import "./IndividualNav.css";
 import Button from "@mui/material/Button";
 
-const IndividualNav = ({ setIndividualMap, setShowPlayBar, individualDataObj}) => {
+const IndividualNav = ({ setIndividualMap, setShowPlayBar, individualDataObj, setIsCalender}) => {
   const handleClose = () => {
     setIndividualMap(false);
+    
   };
 
   const handleHistory = ()=> {
     setShowPlayBar(true);
+    setIsCalender(true);
   }
 
   return (

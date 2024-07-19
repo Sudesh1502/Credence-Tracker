@@ -162,28 +162,23 @@ export const Tablee = ({ data }) => {
 
   useEffect(() => {
     const getAddressFromLatLng = async (lat, lng) => {
+      const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
+      const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey}`;
+    
       try {
-        const response = await axios.get(
-          `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyC30e6tiNsE_rn2YY8kfPFfNPZxG3YlOu4`
-        );
-        const address = response.data.results[0].formatted_address;
-        // console.log(`Latitude: ${lat}, Longitude: ${lng}, Address: ${address}`);
-        return address;
-      } catch (error) {
-        if (error.response) {
-          // The request was made and the server responded with a status code
-          // console.error("Error - Response Data:", error.response.data);
-          // console.error("Error - Response Status:", error.response.status);
-        } else if (error.request) {
-          // The request was made but no response was received
-          // console.error("Error - No Response:", error.request);
+        const response = await axios.get(url);
+        if (response.data.results.length > 0) {
+          setAddressesValue(response.data.results[0].formatted_address);
         } else {
-          // Something happened in setting up the request that triggered an Error
-          // console.error("Error - Request Setup:", error.message);
+          setAddressesValue("Address not found");
         }
-        return null;
+      } catch (error) {
+        console.error("Error fetching address:", error);
+        setAddressesValue("Error fetching address");
       }
     };
+    
+    
 
     const fetchAddresses = async () => {
       const addresses = await Promise.all(

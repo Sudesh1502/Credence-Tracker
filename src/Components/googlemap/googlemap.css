@@ -35,3 +35,63 @@
     max-width: 300px;
     z-index: 300; /* Lower z-index */
   }
+
+  
+.leaflet-popup-content-wrapper {
+  z-index: 500; /* Lower z-index */
+  background-color: #dff1f4 !important;
+  min-width: 280px;
+}
+
+.leaflet-tooltip {
+  background-color: rgb(183 217 239);
+  color: black;
+  font-size: 14px;
+  border-radius: 5px;
+  padding: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  z-index: 1000; /* Ensure tooltip is on top */
+}
+
+.leaflet-popup-tip {
+  background: none;
+  border: none;
+}
+
+.popup {
+  font-size: 1.1rem;
+  max-width: 300px;
+  z-index: 300; /* Lower z-index */
+}
+
+.tooltipNamePlate{
+  display: flex;
+  align-items: center;
+  border: 3px solid black;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: pink;
+
+}
+
+.tooltipNamePlate div{
+  padding: 7px 10px;
+  
+  
+  color: black;
+}
+
+.tooltipNamePlate div p{
+  padding: 0;
+  margin: 0;
+  
+
+}
+
+.ind{
+  border-right: 3px solid black;
+  background-color:#98c8e4;
+}
+.name{
+  background-color: #fde9a4;
+}
