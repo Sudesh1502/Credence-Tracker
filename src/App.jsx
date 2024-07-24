@@ -53,6 +53,7 @@ import axios from "axios";
 import { Button } from "@mui/material";
 // import { FetchData } from './Components/FetchData.jsx';
 import { VehicleDetails } from "./Components/VehicleDetails.jsx";
+import Loader from "./Components/Loader/Loader.jsx";
 
 function App() {
   const [state, setState] = useState(0);
@@ -82,6 +83,7 @@ function App() {
   const [deviceApiData, setDeviceApiData] = useState([]); // State variable to store device API data
   const [positionApiData, setPositionApiData] = useState([]); // State variable to store position API data
   const [mergedData, setMergedData] = useState([]);
+  
 
   useEffect(() => {
     const fetchDeviceData = async () => {
@@ -262,7 +264,10 @@ function App() {
 
   return (
     <>
-      <div style={{ marginLeft: state, marginTop: "64px" }}>
+    
+    {/* {(deviceApiData ? <></>:<Loader/>} */}
+    <div style={{backgroundColor:"#fff"}}>
+      <div style={{ marginLeft: state, marginTop: "24px"}}>
         {/* <FetchData /> */}
         {/* <VehicleDetails /> */}
         <Navbar propFunc={handleClickNav} propBool={setSideBarBool} />
@@ -399,6 +404,7 @@ function App() {
           ].includes(component) && <Tablee data={mergedData} />}
         </div>
       </div>
+    </div>
     </>
   );
 }

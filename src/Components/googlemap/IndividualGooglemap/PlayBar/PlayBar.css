@@ -1,19 +1,28 @@
 .container {
   width: 100%;
-  background-color: #ffffff;
+  background-color: #fff;
   color: black;
   display: flex;
+  align-items: flex-start;
+  overflow-x: hidden;
+  align-items: center;
+  height: 8rem;
   flex-direction: column;
-  align-items: flex-start; /* Align items to the start */
+  gap: 27px;
 }
-
+.container::-webkit-scrollbar {
+  display: none;
+}
+hr {
+  width: 100%;
+}
 .playbar-container {
   background-color: #ffffff;
-  width: 100%;
+  /* width: 100%; */
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 30px 20px 5px 20px;
+  /* padding: 30px 20px 5px 20px; */
   gap: 1.2rem;
 }
 
@@ -28,9 +37,11 @@ input[type="range"] {
   -moz-appearance: none;
   display: block;
   width: 80%;
-  height: 8px;
-  background-color: #d5d5d5;
+  height: 5px;
+  background-color: #fff !important;
   outline: none;
+  border: 1px solid black;
+  border-radius: 8px;
 }
 
 input[type="range"]::-webkit-slider-runnable-track {
@@ -50,13 +61,13 @@ input[type="range"]::-ms-track {
 
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
-  height: 40px;
-  width: 8px;
-  background-color: #2c3e50;
+  height: 20px;
+  width: 5px;
+  background-color: #000000;
   border-radius: 5px;
   cursor: pointer;
   border: none;
-  margin-top: -14px;
+  margin-top: -6px;
 }
 
 input[type="range"]::-moz-range-thumb {
@@ -71,60 +82,79 @@ input[type="range"]::-ms-thumb {
 
 input[type="range"]:active::-webkit-slider-thumb {
   background-color: #ffffff;
-  border: 3px solid #2c3e50;
+  border: 3px solid #000000;
 }
 
 .playBar-btn {
   border-radius: 50%;
-  background-color: #2c3e50;
-  color: #ffffff;
-  padding: 5px;
-}
-
-.playBarInfo {
+  transition: 0.5s;
   display: flex;
-  gap: 15px;
-  margin-left: 100px;
-  flex-wrap: wrap; /* Allow wrapping to handle line breaks */
+  align-items: center;
+  justify-content: center;
+}
+.BtnIcon {
+  width: 1rem;
+  height: 1.5rem;
+  font-size: 1rem !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.playBarInfo {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 60px; /* Allow wrapping to handle line breaks */
 }
 
 .dataInfo {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 10px;
   flex-direction: row;
 }
 
 .head {
-  font-size: 1.3rem;
+  font-size: 1rem;
   font-weight: 400;
+  color: "#fff";
 }
 
 .headData {
   padding: 2px;
   background-color: #d5d5d5;
-  margin-top: 12px;
+  /* margin-top: 12px; */
   border-radius: 8px;
-  padding-left: 10px;
-  padding-right: 10px;
+  padding-left: 5px;
+  padding-right: 5px;
   color: #565353;
+  font-size: 0.8rem;
 }
 
 .cutHistory {
-  margin-left: 3rem;
-  margin-right: 100px;
+  margin-left: 50.7rem;
+  margin-top: 5px;
+  /* margin-right: 100px; */
   align-self: right;
-  padding: 5px 15px;
+  padding: 13px 15px;
   font-size: 1rem;
   font-weight: 600;
   border-radius: 6px;
   border: none;
-  background-color: #2c3e50;
+  background-color: #000000;
   color: #ffffff;
+  font-size: 1rem;
+  width:6rem;
 }
 
 .progress-percentage {
   margin-left: 10px;
-  font-size: 30px;
-  color: #2c3e50;
+  font-size: 1.2rem;
+  color: #000000;
+}
+
+#progress-bar {
+  background-color: #fff !important;
 }

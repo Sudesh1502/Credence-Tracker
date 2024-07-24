@@ -1,3 +1,14 @@
-.hover-underline:hover {
+/* .hover-underline:hover {
     text-decoration: underline;
+} */
+.css-1ex1afd-MuiTableCell-root {
+    border: 2px solid black !important;
+    background-color: #fff !important;
+    border-top: 0px !important;
+    border-right: 0px !important;
+}
+td{
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

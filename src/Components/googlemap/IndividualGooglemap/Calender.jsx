@@ -25,7 +25,7 @@ const Calender = ({setStartDateTime,setEndDateTime}) => {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DemoContainer components={['DateTimeRangePicker']}>
           <DateTimeRangePicker
-            localeText={{ start: 'Check-in', end: 'Check-out' }}
+            localeText={{ start: 'Start Time', end: 'End Time' }}
             value={[startDateTimeValue ? dayjs(startDateTimeValue) : null, endDateTimeValue ? dayjs(endDateTimeValue) : null]}
             onChange={handleDateTimeChange}
           />

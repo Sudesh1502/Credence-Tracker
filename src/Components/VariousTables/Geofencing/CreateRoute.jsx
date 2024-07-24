@@ -24,7 +24,7 @@ export const CreateRoute = () => {
         variant="contained"
         onClick={{}}
         sx={{
-          backgroundColor: '#2c3e50',
+          backgroundColor: '#000000',
           '&:hover': {
             backgroundColor: '#1a242f',
           },
@@ -37,7 +37,7 @@ export const CreateRoute = () => {
         variant="contained"
         onClick={{}}
         sx={{
-          backgroundColor: '#2c3e50',
+          backgroundColor: '#000000',
           '&:hover': {
             backgroundColor: '#1a242f',
           },
@@ -50,7 +50,7 @@ export const CreateRoute = () => {
         variant="contained"
         onClick={()=>setLocation('')}
         sx={{
-          backgroundColor: '#2c3e50',
+          backgroundColor: '#000000',
           '&:hover': {
             backgroundColor: '#1a242f',
           },
@@ -67,7 +67,7 @@ export const CreateRoute = () => {
           <label for="favcolor">Color:</label>
           <input type="color" id="favcolor" value="#ff0000" /><br/>
           <Button variant="contained"  sx={{
-          backgroundColor: '#2c3e50',
+          backgroundColor: '#000000',
           '&:hover': {
             backgroundColor: '#1a242f',
           },

@@ -19,7 +19,7 @@ const IndividualNav = ({ setIndividualMap, setShowPlayBar, individualDataObj, se
         <Button
           variant="contained"
           sx={{
-            backgroundColor: "#2c3e50",
+            backgroundColor: "#000000",
             "&:hover": {
               backgroundColor: "#1a242f",
             },
@@ -30,7 +30,7 @@ const IndividualNav = ({ setIndividualMap, setShowPlayBar, individualDataObj, se
         <Button
           variant="contained"
           sx={{
-            backgroundColor: "#2c3e50",
+            backgroundColor: "#000000",
             "&:hover": {
               backgroundColor: "#1a242f",
             },
@@ -43,7 +43,7 @@ const IndividualNav = ({ setIndividualMap, setShowPlayBar, individualDataObj, se
         <Button
           variant="contained"
           sx={{
-            backgroundColor: "#2c3e50",
+            backgroundColor: "#000000",
             "&:hover": {
               backgroundColor: "#1a242f",
             },
@@ -54,7 +54,7 @@ const IndividualNav = ({ setIndividualMap, setShowPlayBar, individualDataObj, se
         <Button
           variant="contained"
           sx={{
-            backgroundColor: "#2c3e50",
+            backgroundColor: "#000000",
             "&:hover": {
               backgroundColor: "#1a242f",
             },

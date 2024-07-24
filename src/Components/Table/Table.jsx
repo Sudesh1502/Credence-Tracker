@@ -33,6 +33,7 @@ import {
   keyframes,
 } from "@mui/material";
 import IndividualGooglemap from "../googlemap/IndividualGooglemap/IndividualGooglemap.jsx";
+import "./table.css";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -60,7 +61,7 @@ const style = {
 export const Tablee = ({ data }) => {
   // console.log(data);
   const [page, setPage] = useState(0);
-  const [individualDataObj,setIndividualDataObj] = useState({});
+  const [individualDataObj, setIndividualDataObj] = useState({});
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [filterText, setFilterText] = useState("");
   const [filteredRows, setFilteredRows] = useState(
@@ -99,7 +100,7 @@ export const Tablee = ({ data }) => {
   const [lati, setLati] = useState(0);
   const [longi, setLongi] = useState(0);
   const [individualMap, setIndividualMap] = useState(false);
-  const [lat, setLat]= useState(0);
+  const [lat, setLat] = useState(0);
   const [lng, setLng] = useState(0);
 
   useEffect(() => {
@@ -133,38 +134,40 @@ export const Tablee = ({ data }) => {
     // }
   }, [filteredRows]);
 
-
-
-
-  useEffect(()=>{
-    const running = data.filter((row)=>row.speed>0).length;
+  useEffect(() => {
+    const running = data.filter((row) => row.speed > 0).length;
     setVehicleRunningCount(running);
 
-    const stopped = data.filter((row)=>row.speed===0 && row.status==='offline').length;
+    const stopped = data.filter(
+      (row) => row.speed === 0 && row.status === "offline"
+    ).length;
     setVehicleStoppedCount(stopped);
 
-    const overspeed = data.filter((row)=>row.speed>140).length;
+    const overspeed = data.filter((row) => row.speed > 140).length;
     setVehicleOverspeedCount(overspeed);
 
-    const idle = data.filter((row)=>row.speed===0 && row.status==='online').length;
+    const idle = data.filter(
+      (row) => row.speed === 0 && row.status === "online"
+    ).length;
     setVehicleIdleCount(idle);
 
     const currentTime = new Date();
     const twelveHoursInMilliseconds = 12 * 60 * 60 * 1000;
 
-    const unreachable = data.filter((row) => 
-      row.status === 'offline' && 
-        currentTime - new Date(row.lastUpdate) >twelveHoursInMilliseconds
+    const unreachable = data.filter(
+      (row) =>
+        row.status === "offline" &&
+        currentTime - new Date(row.lastUpdate) > twelveHoursInMilliseconds
     ).length;
 
     setVehicleUnreachableCount(unreachable);
-  },[data])
+  }, [data]);
 
   useEffect(() => {
     const getAddressFromLatLng = async (lat, lng) => {
-      const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
+      const apiKey = "AIzaSyAvHHoPKPwRFui0undeEUrz00-8w6qFtik";
       const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey}`;
-    
+
       try {
         const response = await axios.get(url);
         if (response.data.results.length > 0) {
@@ -177,8 +180,6 @@ export const Tablee = ({ data }) => {
         setAddressesValue("Error fetching address");
       }
     };
-    
-    
 
     const fetchAddresses = async () => {
       const addresses = await Promise.all(
@@ -239,25 +240,22 @@ export const Tablee = ({ data }) => {
     setAssetDetailsModalOpen(true);
   };
 
-  const handleLocationClick = (latitude, longitude) => {
+  const handleLocationClick = (latitude, longitude,row) => {
     setIndividualMap(true);
-    
-    setLati (latitude);
-    
-    setLongi (longitude);
-    
+    console.log("I am row .........................   ",row)
+    setLati(latitude);
+
+    setLongi(longitude);
   };
 
-  
-  const handleData = (dataLat,dataLng,data) =>{
-    for(let i = 0; i < data.length; i++){
-      if(data[i].latitude === dataLat && data[i].longitude === dataLng){
-        setIndividualDataObj( data[i]);
+  const handleData = (dataLat, dataLng, data) => {
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].latitude === dataLat && data[i].longitude === dataLng) {
+        setIndividualDataObj(data[i]);
         // console.log(data[i]);
-        
       }
     }
-  }
+  };
 
   const handleExport = () => {
     const dataToExport = filteredRows.map((row) => {
@@ -322,437 +320,502 @@ export const Tablee = ({ data }) => {
 
   return (
     <>
-      <div style={{ marginTop: "75px" }}>
-        {
-          individualMap 
-          ?
+      <div style={{ marginTop: "-13px" }}>
+        {individualMap ? (
           <></>
-          :
+        ) : (
           <>
-          <div style={{ display: "flex", gap: "16px" }}>
-          <FormControl
-            variant="outlined"
-            fullWidth
-            sx={{ width: 250, "& .MuiInputBase-root": { height: 40 } }}
-          >
-            <InputLabel id="asset-status-label-1">Asset Status</InputLabel>
-            <Select
-              labelId="asset-status-label-1"
-              id="asset-status-select-1"
-              value={assetStatusValue}
-              onChange={(e) => setAssetStatusValue(e.target.value)}
-              label="Select Asset Status"
+            <hr />
+            <div
+              style={{
+                display: "flex",
+                gap: "16px",
+                marginBottom: "20px",
+                padding: "0 20px",
+              }}
             >
-              <MenuItem value="All assets">All assets</MenuItem>
-              <MenuItem value="Running">Running</MenuItem>
-              <MenuItem value="Parked">Parked</MenuItem>
-              <MenuItem value="less than 10km">Less than 10km</MenuItem>
-              <MenuItem value="Out of Network">Out of Network</MenuItem>
-              <MenuItem value="Device Fault">Device Fault</MenuItem>
-            </Select>
-          </FormControl>
-          <FormControl
-            variant="outlined"
-            fullWidth
-            sx={{ width: 250, "& .MuiInputBase-root": { height: 40 } }}
-          >
-            <InputLabel id="asset-status-label-2">Assets</InputLabel>
-            <Select
-              labelId="assets-label-2"
-              id="assets-select-2"
-              value={assetsValue}
-              onChange={(e) => setAssetsValue(e.target.value)}
-              label="Select Assets"
-            >
-              {/* Add your asset options here */}
-            </Select>
-          </FormControl>
+              <FormControl
+                variant="outlined"
+                fullWidth
+                sx={{ width: 250, "& .MuiInputBase-root": { height: 40 } }}
+              >
+                <InputLabel id="asset-status-label-1">Asset Status</InputLabel>
+                <Select
+                  labelId="asset-status-label-1"
+                  id="asset-status-select-1"
+                  value={assetStatusValue}
+                  onChange={(e) => setAssetStatusValue(e.target.value)}
+                  label="Select Asset Status"
+                >
+                  <MenuItem value="All assets">All assets</MenuItem>
+                  <MenuItem value="Running">Running</MenuItem>
+                  <MenuItem value="Parked">Parked</MenuItem>
+                  <MenuItem value="less than 10km">Less than 10km</MenuItem>
+                  <MenuItem value="Out of Network">Out of Network</MenuItem>
+                  <MenuItem value="Device Fault">Device Fault</MenuItem>
+                </Select>
+              </FormControl>
+              <FormControl
+                variant="outlined"
+                fullWidth
+                sx={{ width: 250, "& .MuiInputBase-root": { height: 40 } }}
+              >
+                <InputLabel id="asset-status-label-2">Assets</InputLabel>
+                <Select
+                  labelId="assets-label-2"
+                  id="assets-select-2"
+                  value={assetsValue}
+                  onChange={(e) => setAssetsValue(e.target.value)}
+                  label="Select Assets"
+                >
+                  {/* Add your asset options here */}
+                </Select>
+              </FormControl>
 
-          <FormControl
-            variant="outlined"
-            fullWidth
-            sx={{ width: 250, "& .MuiInputBase-root": { height: 40 } }}
-          >
-            <InputLabel id="users-label-3">Users</InputLabel>
-            <Select
-              labelId="users-label-3"
-              id="users-select-3"
-              value={usersValue}
-              onChange={(e) => setUsersValue(e.target.value)}
-              label="Select Users"
-            >
-              <MenuItem value="All users">All users</MenuItem>
-              <MenuItem value="ankur(Ankur Jain)">ankur(Ankur Jain)</MenuItem>
-              <MenuItem value="ashwini(Ashwini Gaikwad)">
-                ashwini(Ashwini Gaikwad)
-              </MenuItem>
-              <MenuItem value="harshal(harshal harshal)">
-                harshal(harshal harshal)
-              </MenuItem>
-              <MenuItem value="Harshal 123 (HARSHAL CREDANCE)">
-                Harshal 123 (HARSHAL CREDANCE)
-              </MenuItem>
-              <MenuItem value="josh(josh JOSH)">josh(josh JOSH)</MenuItem>
-              <MenuItem value="vts(CGS Company)">vts(CGS Company)</MenuItem>
-              <MenuItem value="vtsdemo1 (chate global services)">
-                vtsdemo1 (chate global services)
-              </MenuItem>
-              <MenuItem value="wcldemo(wcl wcl)">wcldemo(wcl wcl)</MenuItem>
-              {/* Add your user options here */}
-            </Select>
-          </FormControl>
-          <FormControl
-            variant="outlined"
-            fullWidth
-            sx={{ width: 250, "& .MuiInputBase-root": { height: 40 } }}
-          >
-            <InputLabel id="groups-label-4" style={{ alignItems: "center" }}>
-              Groups
-            </InputLabel>
-            <Select
-              labelId="groups-label-4"
-              id="groups-select-4"
-              value={groupsValue}
-              onChange={(e) => setGroupsValue(e.target.value)}
-              label="Select Groups"
-            >
-              <MenuItem value="All Group">All Group</MenuItem>
-              <MenuItem value="Ankur asset">Ankur asset</MenuItem>
-              {/* Add your group options here */}
-            </Select>
-          </FormControl>
-          <FormControl
-            variant="outlined"
-            fullWidth
-            sx={{ width: 250, "& .MuiInputBase-root": { height: 40 } }}
-          >
-            <InputLabel id="areas-label-5">Areas</InputLabel>
-            <Select
-              labelId="areas-label-5"
-              id="areas-select-5"
-              value={areasValue}
-              onChange={(e) => setAreasValue(e.target.value)}
-              label="Select Areas"
-            >
-              <MenuItem value="All Areas">All Areas</MenuItem>
-              <MenuItem value="amanora">amanora</MenuItem>
-              <MenuItem value="Ram Nager">Ram Nager</MenuItem>
-              {/* Add your area options here */}
-            </Select>
-          </FormControl>
-          <FormControl
-            variant="outlined"
-            fullWidth
-            sx={{ width: 250, "& .MuiInputBase-root": { height: 40 } }}
-          >
-            <InputLabel id="landmarks-label-6">Landmarks</InputLabel>
-            <Select
-              labelId="landmarks-label-6"
-              id="landmarks-select-6"
-              value={landmarksValue}
-              onChange={(e) => setLandmarksValue(e.target.value)}
-              label="Select Landmarks"
-            >
-              <MenuItem value="All Landmarks">All Landmarks</MenuItem>
-              <MenuItem value="API Corner">API Corner</MenuItem>
-              <MenuItem value="LOADING POINT">LOADING POINT</MenuItem>
-              <MenuItem value="Shivneri Lawns">Shivneri Lawns</MenuItem>
-              <MenuItem value="UNLOADING POINT">UNLOADING POINT</MenuItem>
-              <MenuItem value="weighing bridge">weighing bridge</MenuItem>
-              <MenuItem value="yashwant nagar">yashwant nagar</MenuItem>
-              {/* Add your landmark options here */}
-            </Select>
-          </FormControl>
-        </div>
-        <br />
+              <FormControl
+                variant="outlined"
+                fullWidth
+                sx={{ width: 250, "& .MuiInputBase-root": { height: 40 } }}
+              >
+                <InputLabel id="users-label-3">Users</InputLabel>
+                <Select
+                  labelId="users-label-3"
+                  id="users-select-3"
+                  value={usersValue}
+                  onChange={(e) => setUsersValue(e.target.value)}
+                  label="Select Users"
+                >
+                  <MenuItem value="All users">All users</MenuItem>
+                  <MenuItem value="ankur(Ankur Jain)">
+                    ankur(Ankur Jain)
+                  </MenuItem>
+                  <MenuItem value="ashwini(Ashwini Gaikwad)">
+                    ashwini(Ashwini Gaikwad)
+                  </MenuItem>
+                  <MenuItem value="harshal(harshal harshal)">
+                    harshal(harshal harshal)
+                  </MenuItem>
+                  <MenuItem value="Harshal 123 (HARSHAL CREDANCE)">
+                    Harshal 123 (HARSHAL CREDANCE)
+                  </MenuItem>
+                  <MenuItem value="josh(josh JOSH)">josh(josh JOSH)</MenuItem>
+                  <MenuItem value="vts(CGS Company)">vts(CGS Company)</MenuItem>
+                  <MenuItem value="vtsdemo1 (chate global services)">
+                    vtsdemo1 (chate global services)
+                  </MenuItem>
+                  <MenuItem value="wcldemo(wcl wcl)">wcldemo(wcl wcl)</MenuItem>
+                  {/* Add your user options here */}
+                </Select>
+              </FormControl>
+              <FormControl
+                variant="outlined"
+                fullWidth
+                sx={{ width: 250, "& .MuiInputBase-root": { height: 40 } }}
+              >
+                <InputLabel
+                  id="groups-label-4"
+                  style={{ alignItems: "center" }}
+                >
+                  Groups
+                </InputLabel>
+                <Select
+                  labelId="groups-label-4"
+                  id="groups-select-4"
+                  value={groupsValue}
+                  onChange={(e) => setGroupsValue(e.target.value)}
+                  label="Select Groups"
+                >
+                  <MenuItem value="All Group">All Group</MenuItem>
+                  <MenuItem value="Ankur asset">Ankur asset</MenuItem>
+                  {/* Add your group options here */}
+                </Select>
+              </FormControl>
+              <FormControl
+                variant="outlined"
+                fullWidth
+                sx={{ width: 250, "& .MuiInputBase-root": { height: 40 } }}
+              >
+                <InputLabel id="areas-label-5">Areas</InputLabel>
+                <Select
+                  labelId="areas-label-5"
+                  id="areas-select-5"
+                  value={areasValue}
+                  onChange={(e) => setAreasValue(e.target.value)}
+                  label="Select Areas"
+                >
+                  <MenuItem value="All Areas">All Areas</MenuItem>
+                  <MenuItem value="amanora">amanora</MenuItem>
+                  <MenuItem value="Ram Nager">Ram Nager</MenuItem>
+                  {/* Add your area options here */}
+                </Select>
+              </FormControl>
+              <FormControl
+                variant="outlined"
+                fullWidth
+                sx={{ width: 250, "& .MuiInputBase-root": { height: 40 } }}
+              >
+                <InputLabel id="landmarks-label-6">Landmarks</InputLabel>
+                <Select
+                  labelId="landmarks-label-6"
+                  id="landmarks-select-6"
+                  value={landmarksValue}
+                  onChange={(e) => setLandmarksValue(e.target.value)}
+                  label="Select Landmarks"
+                >
+                  <MenuItem value="All Landmarks">All Landmarks</MenuItem>
+                  <MenuItem value="API Corner">API Corner</MenuItem>
+                  <MenuItem value="LOADING POINT">LOADING POINT</MenuItem>
+                  <MenuItem value="Shivneri Lawns">Shivneri Lawns</MenuItem>
+                  <MenuItem value="UNLOADING POINT">UNLOADING POINT</MenuItem>
+                  <MenuItem value="weighing bridge">weighing bridge</MenuItem>
+                  <MenuItem value="yashwant nagar">yashwant nagar</MenuItem>
+                  {/* Add your landmark options here */}
+                </Select>
+              </FormControl>
+
+              <FormControl
+                variant="outlined"
+                fullWidth
+                sx={{
+                  width: 250,
+                  "& .MuiInputBase-root": { height: 40 },
+                  marginBottom: 2,
+                }}
+              >
+                <InputLabel id="vehicles-label-6">Select Vehicles</InputLabel>
+                <Select
+                  labelId="vehicles-label-6"
+                  id="vehicles-select-6"
+                  value={vehiclesValue}
+                  onChange={(e) => setVehiclesValue(e.target.value)}
+                  label="Select Asset Status"
+                >
+                  <MenuItem value="MH40BL3039-BESA">MH40BL3039-BESA</MenuItem>
+                  <MenuItem value="MH40AT0461-HANSA">MH40AT0461-HANSA</MenuItem>
+                  <MenuItem value="MH04CU9077">MH04CU9077</MenuItem>
+                  <MenuItem value="MH34BG5552">MH34BG5552</MenuItem>
+                  <MenuItem value="MH31FC2330">MH31FC2330</MenuItem>
+                  <MenuItem value="MH31FC1100">MH31FC1100</MenuItem>
+                  <MenuItem value="MH31-EQ0455">MH31-EQ0455</MenuItem>
+                  <MenuItem value="Mixer">Mixer</MenuItem>
+                  <MenuItem value="MH29M8497-HANSA">MH29M8497-HANSA</MenuItem>
+
+                  {/* Add your landmark options here */}
+                </Select>
+              </FormControl>
+            </div>
+
+            {/* <br />
         <div style={{ display: "flex", justifyContent: "right" }}>
-          <FormControl
-            variant="outlined"
-            fullWidth
-            sx={{
-              width: 250,
-              "& .MuiInputBase-root": { height: 40 },
-              marginBottom: 2,
-            }}
-          >
-            <InputLabel id="vehicles-label-6">Select Vehicles</InputLabel>
-            <Select
-              labelId="vehicles-label-6"
-              id="vehicles-select-6"
-              value={vehiclesValue}
-              onChange={(e) => setVehiclesValue(e.target.value)}
-              label="Select Asset Status"
-            >
-              <MenuItem value="MH40BL3039-BESA">MH40BL3039-BESA</MenuItem>
-              <MenuItem value="MH40AT0461-HANSA">MH40AT0461-HANSA</MenuItem>
-              <MenuItem value="MH04CU9077">MH04CU9077</MenuItem>
-              <MenuItem value="MH34BG5552">MH34BG5552</MenuItem>
-              <MenuItem value="MH31FC2330">MH31FC2330</MenuItem>
-              <MenuItem value="MH31FC1100">MH31FC1100</MenuItem>
-              <MenuItem value="MH31-EQ0455">MH31-EQ0455</MenuItem>
-              <MenuItem value="Mixer">Mixer</MenuItem>
-              <MenuItem value="MH29M8497-HANSA">MH29M8497-HANSA</MenuItem>
-
-              {/* Add your landmark options here */}
-            </Select>
-          </FormControl>
-        </div>
+          
+        </div> */}
           </>
-        }
+        )}
 
         {/* GoogleMaps */}
         {individualMap ? (
-          <IndividualGooglemap latitude={latitude} longitude={longitude} setIndividualMap = {setIndividualMap} style={{width:"100%"}}  data={data} individualDataObj={individualDataObj}/>
+          <IndividualGooglemap
+            latitude={latitude}
+            longitude={longitude}
+            setIndividualMap={setIndividualMap}
+            style={{ width: "100%" }}
+            data={data}
+            individualDataObj={individualDataObj}
+          />
         ) : (
-          <GoogleMapComponent latitude={latitude} longitude={longitude} data={data} />
+          <div
+            className="gogo"
+            style={{ display: "flex", justifyContent: "center" }}
+          >
+            <GoogleMapComponent
+              latitude={latitude}
+              longitude={longitude}
+              data={data}
+            />
+          </div>
         )}
 
         <br />
       </div>
 
       {individualMap ? (
-          <></>
-        ) : (
-          <Cards
-        vehicleRunningCount={vehicleRunningCount}
-        vehicleStoppedCount={vehicleStoppedCount}
-        vehicleOverspeedCount={vehicleOverspeedCount}
-        vehicleIdleCount={vehicleIdleCount}
-        vehicleUnreachableCount={vehicleUnreachableCount}
-      /> 
-        )}
-      
+        <></>
+      ) : (
+        <Cards
+          vehicleRunningCount={vehicleRunningCount}
+          vehicleStoppedCount={vehicleStoppedCount}
+          vehicleOverspeedCount={vehicleOverspeedCount}
+          vehicleIdleCount={vehicleIdleCount}
+          vehicleUnreachableCount={vehicleUnreachableCount}
+        />
+      )}
+
       <br />
 
+      {individualMap ? <></> : <hr />}
       <div>
-      {individualMap ? (
+        {individualMap ? (
           <></>
         ) : (
           <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            marginBottom: "10px",
-          }}
-        >
-          <TextField
-            label="Search"
-            variant="outlined"
-            value={filterText}
-            onChange={handleFilterChange}
-            sx={{
-              marginRight: "10px",
-              width: "200px",
-              "& .MuiInputBase-root": { height: 40 },
+            style={{
+              display: "flex",
+              alignItems: "center",
+              marginBottom: "15px",
+              marginLeft: "3.5rem",
             }}
-            InputProps={{
-              startAdornment: (
-                <SearchIcon
-                  style={{
-                    cursor: "pointer",
-                    marginLeft: "10px",
-                    marginRight: "5px",
-                  }}
-                />
-              ),
-            }}
-          />
+          >
+            <TextField
+              label="Search"
+              variant="outlined"
+              value={filterText}
+              onChange={handleFilterChange}
+              sx={{
+                marginRight: "10px",
+                marginLeft: "20px",
+                width: "200px",
+                "& .MuiInputBase-root": { height: 40 },
+              }}
+              InputProps={{
+                startAdornment: (
+                  <SearchIcon
+                    style={{
+                      cursor: "pointer",
+                      marginLeft: "10px",
+                      marginRight: "5px",
+                    }}
+                  />
+                ),
+              }}
+            />
+            <Button
+              variant="contained"
+              onClick={() => setModalOpen(true)}
+              sx={{
+                backgroundColor: "#000000",
+                "&:hover": {
+                  backgroundColor: "#1a242f",
+                },
+              }}
+            >
+              Manage Columns
+            </Button>
+          </div>
+        )}
+
+        {individualMap ? <></> : <hr />}
+
+        {/* GoogleMaps */}
+        {individualMap ? (
+          <></>
+        ) : (
+          <Paper sx={{ width: "100%", overflow: "hidden", marginTop: "16px" , display:"flex", justifyContent:"center", flexDirection:"column", alignItems:"center"}}>
+            <TableContainer sx={{ maxHeight: "100%", width:"90%", borderRight:"2px solid black",borderTop:"2px solid black", borderRadius:"5px" }}>
+              <Table stickyHeader aria-label="sticky table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell
+                      key="select-all"
+                      align="left"
+                      style={{
+                        minWidth: 50,
+                        borderRight: "1px solid #ddd",
+                        backgroundColor: "#000000",
+                        color: "white",
+                      }}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={selectAll}
+                        onChange={handleSelectAll}
+                      />
+                    </TableCell>
+                    {columns.map(
+                      (column) =>
+                        column.accessor !== "select" &&
+                        columnVisibility[column.accessor] && (
+                          <TableCell
+                            key={column.Header}
+                            align={
+                              column.accessor === "date_of_birth"
+                                ? "right"
+                                : "left"
+                            }
+                            style={{
+                              minWidth: column.minWidth,
+                              borderRight: "1px solid #ddd",
+                              backgroundColor: "#000000",
+                              color: "white",
+                            }}
+                          >
+                            <div
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                cursor: "pointer",
+                              }}
+                              onClick={() => requestSort(column.accessor)}
+                            >
+                              {column.Header}
+                              <ArrowUpwardIcon
+                                style={{
+                                  width: "10px",
+                                  color:
+                                    sortConfig.key === column.accessor &&
+                                    sortConfig.direction === "ascending"
+                                      ? "black"
+                                      : "#bbb",
+                                }}
+                              />
+                              <ArrowDownwardIcon
+                                style={{
+                                  width: "10px",
+                                  color:
+                                    sortConfig.key === column.accessor &&
+                                    sortConfig.direction === "descending"
+                                      ? "black"
+                                      : "#bbb",
+                                }}
+                              />
+                            </div>
+                          </TableCell>
+                        )
+                    )}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {sortedData
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row, index) => (
+                      <TableRow
+                        hover
+                        role="checkbox"
+                        tabIndex={-1}
+                        key={row.id}
+                        style={{
+                          backgroundColor:
+                            index % 2 === 0 ? "white" : "#f9f9f9",
+                        }}
+                        onClick={() => {
+                          
+                            handleData(
+                              row.latitude,
+                              row.longitude,
+                              data
+                            );
+
+                            handleLocationClick(
+                              row.latitude,
+                              row.longitude
+                            );
+                         
+                          
+                        }}
+                      >
+                        <TableCell className="tablecell"
+                          key={`select-${index}`}
+                          align="left"
+                          style={{
+                            borderRight: "1px solid #ddd",
+                          }}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={row.isSelected}
+                            onChange={() => handleRowSelect(index)}
+                          />
+                        </TableCell>
+                        {columns.map(
+                          (column) =>
+                            column.accessor !== "select" &&
+                            columnVisibility[column.accessor] && (
+                              <TableCell className="tablecell"
+                                key={column.accessor}
+                                align={
+                                  column.accessor === "date_of_birth"
+                                    ? "right"
+                                    : "left"
+                                }
+                                style={{
+                                  borderRight: "1px solid #ddd",
+                                  cursor:
+                                    column.accessor === "location"
+                                      ? "pointer"
+                                      : "default", 
+                                }}
+                                onClick={() => {
+                                  if (column.accessor === "location") {
+                                    handleData(
+                                      row.latitude,
+                                      row.longitude,
+                                      data
+                                    );
+
+                                    handleLocationClick(
+                                      row.latitude,
+                                      row.longitude,
+                                      row
+                                      
+                                    );
+                                  } else if (column.accessor === "name") {
+                                    handleVehicleClick();
+                                  }
+                                }}
+                              >
+                                {column.Cell
+                                  ? column.Cell({
+                                      value: row[column.accessor],
+                                      row,
+                                    })
+                                  : row[column.accessor]}
+                              </TableCell>
+                            )
+                        )}
+                      </TableRow>
+                    ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <TablePagination
+              style={{
+                backgroundColor: "#fff",
+                borderBottom: "1px solid black",
+              }}
+              rowsPerPageOptions={[10, 25, 10, 0]}
+              component="div"
+              count={filteredRows.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </Paper>
+        )}
+
+        {individualMap ? (
+          <></>
+        ) : (
           <Button
             variant="contained"
-            onClick={() => setModalOpen(true)}
+            color="primary"
+            startIcon={<ImportExportIcon />}
+            onClick={handleExport}
             sx={{
-              backgroundColor: "#2c3e50",
+              marginRight: "10px",
+              backgroundColor: "#000000",
               "&:hover": {
                 backgroundColor: "#1a242f",
               },
             }}
+            style={{
+              marginLeft: "20px",
+              marginTop: "20px",
+              marginBottom: "20px",
+            }}
           >
-            Manage Columns
+            Export
           </Button>
-        </div> 
         )}
-        
-            {/* GoogleMaps */}
-        {individualMap ? (
-          <></>
-        ) : (
-          <Paper sx={{ width: "100%", overflow: "hidden", marginTop: "16px" }}>
-          <TableContainer sx={{ maxHeight: "100%" }}>
-            <Table stickyHeader aria-label="sticky table">
-              <TableHead>
-                <TableRow>
-                  <TableCell
-                    key="select-all"
-                    align="left"
-                    style={{
-                      minWidth: 50,
-                      borderRight: "1px solid #ddd",
-                      backgroundColor: "#2c3e50",
-                      color: "white",
-                    }}
-                  >
-                    <input
-                      type="checkbox"
-                      checked={selectAll}
-                      onChange={handleSelectAll}
-                    />
-                  </TableCell>
-                  {columns.map(
-                    (column) =>
-                      column.accessor !== "select" &&
-                      columnVisibility[column.accessor] && (
-                        <TableCell
-                          key={column.Header}
-                          align={
-                            column.accessor === "date_of_birth"
-                              ? "right"
-                              : "left"
-                          }
-                          style={{
-                            minWidth: column.minWidth,
-                            borderRight: "1px solid #ddd",
-                            backgroundColor: "#2c3e50",
-                            color: "white",
-                          }}
-                        >
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              cursor: "pointer",
-                            }}
-                            onClick={() => requestSort(column.accessor)}
-                          >
-                            {column.Header}
-                            <ArrowUpwardIcon
-                              style={{
-                                width: "10px",
-                                color:
-                                  sortConfig.key === column.accessor &&
-                                  sortConfig.direction === "ascending"
-                                    ? "black"
-                                    : "#bbb",
-                              }}
-                            />
-                            <ArrowDownwardIcon
-                              style={{
-                                width: "10px",
-                                color:
-                                  sortConfig.key === column.accessor &&
-                                  sortConfig.direction === "descending"
-                                    ? "black"
-                                    : "#bbb",
-                              }}
-                            />
-                          </div>
-                        </TableCell>
-                      )
-                  )}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {sortedData
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row, index) => (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      tabIndex={-1}
-                      key={row.id}
-                      style={{
-                        backgroundColor: index % 2 === 0 ? "white" : "#f9f9f9",
-                      }}
-                    >
-                      <TableCell
-                        key={`select-${index}`}
-                        align="left"
-                        style={{
-                          borderRight: "1px solid #ddd",
-                        }}
-                      >
-                        <input
-                          type="checkbox"
-                          checked={row.isSelected}
-                          onChange={() => handleRowSelect(index)}
-                        />
-                      </TableCell>
-                      {columns.map(
-                        (column) =>
-                          column.accessor !== "select" &&
-                          columnVisibility[column.accessor] && (
-                            <TableCell
-                              key={column.accessor}
-                              align={
-                                column.accessor === "date_of_birth"
-                                  ? "right"
-                                  : "left"
-                              }
-                              style={{
-                                borderRight: "1px solid #ddd",
-                                cursor:
-                                  column.accessor === "location"
-                                    ? "pointer"
-                                    : "default", // Add cursor style for indicating clickable element
-                              }}
-                              onClick={() => {
-
-                                if (column.accessor === "location") {
-                                  handleData(row.latitude, row.longitude, data);
-                                  
-                                  handleLocationClick(row.latitude, row.longitude)
-                                  
-                                } else if (column.accessor === "name") {
-                                  handleVehicleClick();
-                                }
-                              }}
-                            >
-                              {column.Cell
-                                ? column.Cell({
-                                    value: row[column.accessor],
-                                    row,
-                                  })
-                                : row[column.accessor]}
-                            </TableCell>
-                          )
-                      )}
-                    </TableRow>
-                  ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <TablePagination
-            rowsPerPageOptions={[10, 25, 100]}
-            component="div"
-            count={filteredRows.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
-        </Paper>
-        )}
-
-{individualMap ? (
-          <></>
-        ) : (
-          <Button
-          variant="contained"
-          color="primary"
-          startIcon={<ImportExportIcon />}
-          onClick={handleExport}
-          sx={{
-            marginRight: "10px",
-            backgroundColor: "#2c3e50",
-            "&:hover": {
-              backgroundColor: "#1a242f",
-            },
-          }}
-        >
-          Export
-        </Button> 
-        )}
-        
-        
 
         <Modal
           open={modalOpen}

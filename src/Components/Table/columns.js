@@ -3,7 +3,9 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import axios from 'axios';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 import PowerOffIcon from '@mui/icons-material/PowerOff';
-import Battery30Icon from '@mui/icons-material/Battery30';
+import { MdBatteryChargingFull, MdBatteryCharging90, MdBatteryCharging80, MdBatteryCharging60, MdBatteryCharging50, MdBatteryCharging30, MdBatteryCharging20    } from "react-icons/md";
+import { RiBattery2ChargeLine } from "react-icons/ri";
+import { SiCoronaengine } from "react-icons/si";
 import Battery0BarIcon from '@mui/icons-material/Battery0Bar';
 import Battery1BarIcon from '@mui/icons-material/Battery1Bar';
 import Battery2BarIcon from '@mui/icons-material/Battery2Bar';
@@ -13,6 +15,8 @@ import Battery5BarIcon from '@mui/icons-material/Battery5Bar';
 import Battery6BarIcon from '@mui/icons-material/Battery6Bar';
 import BatteryFullIcon from '@mui/icons-material/BatteryFull';
 import moment from 'moment-timezone';
+import { PiPowerFill } from "react-icons/pi";
+
 
 // Define a component to fetch and display the address
 export const AddressFetcher = ({ lat, lng }) => {
@@ -65,66 +69,7 @@ export const COLUMNS = [
       }
     }
   },
-  {
-    Header: 'Location',
-    accessor: 'location',
-    Cell: () => (
-      <LocationOnIcon style={{ cursor: 'pointer' }}
-      
-      onClick={() => {
-        
-      }} />
-    ),
-  },
-  {
-    Header: 'Ig',
-    accessor: row => row.attributes?.ignition ?? null,
-    Cell: ({ row }) => {
-      const ignitionStatus = row.attributes?.ignition;
-      return ignitionStatus !== undefined ? (
-        ignitionStatus ? (
-          <PowerSettingsNewIcon style={{ color: 'green' }} />
-        ) : (
-          <PowerOffIcon style={{ color: 'red' }} />
-        )
-      ) : (
-        'N/A'
-      ); 
-    },
-  },
-  {
-    Header: 'Sat',
-    accessor: row => row.attributes?.sat ?? null,
-    Cell: ({ row }) => {
-      const SatStatus = row.attributes?.sat;
-      return SatStatus ;
-      
-    },
-  },
-  {
-    Header: 'Battery',
-    accessor: row => row.attributes?.battery ?? null,
-    Cell: ({ row }) => {
-      const batteryStatus = row.attributes?.battery;
-      // console.log('Battery status', batteryStatus);
-      return batteryStatus !== undefined ? (
-        (batteryStatus === 0 && <Battery0BarIcon />) || 
-        (batteryStatus > 0 && batteryStatus <= 1.5 && <Battery1BarIcon />  ) || 
-        (batteryStatus > 1.5 && batteryStatus <= 3 && <Battery2BarIcon/>) || 
-        (batteryStatus > 3 && batteryStatus <= 4.5 && <Battery3BarIcon/>) || 
-        (batteryStatus > 4.5 && batteryStatus <= 6.5 && <Battery4BarIcon/>) || 
-        (batteryStatus > 6.5 && batteryStatus <= 8 && <Battery5BarIcon/>) || 
-        (batteryStatus > 8 && batteryStatus <= 9.9 && <Battery6BarIcon/>) || 
-        (batteryStatus === 10 && <BatteryFullIcon/>)
-      ) : (
-        <BatteryFullIcon/>
-      );
-    },
-  },
-  {
-    Header: 'Driver Name',
-    accessor: 'driver_name'
-  },
+  
   {
     Header: 'Asset Name',
     accessor: 'name',
@@ -175,6 +120,10 @@ export const COLUMNS = [
       );
     },
   },
+  {
+    Header: 'Driver Name',
+    accessor: 'driver_name'
+  },
   // {
   //   Header: 'Total Distance(KM)',
   //   accessor: row => row.attributes?.totalDistance ?? null,
@@ -189,6 +138,64 @@ export const COLUMNS = [
     Header: 'Status',
     accessor: 'status'
   },
+  // {
+  //   Header: 'Location',
+  //   accessor: 'location',
+  //   Cell: () => (
+  //     <img
+  //       src={bike} // Use the imported SVG file or a URL
+  //       alt="Location"
+  //       style={{ cursor: 'pointer', width: '24px', height: '24px' }} // Adjust size and styling as needed
+        
+  //     />
+  //   ),
+  // },
+  {
+    Header: 'Ig',
+    accessor: row => row.attributes?.ignition ?? null,
+    Cell: ({ row }) => {
+      const ignitionStatus = row.attributes?.ignition;
+      return ignitionStatus !== undefined ? (
+        ignitionStatus ? (
+          <PiPowerFill style={{ color: 'green' , fontSize:"1.5rem"}} />
+        ) : (
+          <SiCoronaengine style={{ color: 'red' , fontSize:"1.5rem"}} />
+        )
+      ) : (
+        'N/A'
+      ); 
+    },
+  },
+  {
+    Header: 'Sat',
+    accessor: row => row.attributes?.sat ?? null,
+    Cell: ({ row }) => {
+      const SatStatus = row.attributes?.sat;
+      return SatStatus ;
+      
+    },
+  },
+  {
+    Header: 'Battery',
+    accessor: row => row.attributes?.battery ?? null,
+    Cell: ({ row }) => {
+      const batteryStatus = row.attributes?.battery;
+      // console.log('Battery status', batteryStatus);
+      return batteryStatus !== undefined ? (
+        (batteryStatus === 0 && <RiBattery2ChargeLine style={{color:"red"}} />) || 
+        (batteryStatus > 0 && batteryStatus <= 1.5 && <MdBatteryCharging20 className="batteryIcons" style={{color:"red", fontSize:"1.5rem"}} />  ) || 
+        (batteryStatus > 1.5 && batteryStatus <= 3 && <MdBatteryCharging30 className="batteryIcons" style={{color:"red", fontSize:"1.5rem"}} />) || 
+        (batteryStatus > 3 && batteryStatus <= 4.5 && <MdBatteryCharging50 className="batteryIcons" style={{color:"orange", fontSize:"1.5rem"}} />) || 
+        (batteryStatus > 4.5 && batteryStatus <= 6.5 && <MdBatteryCharging60 className="batteryIcons" style={{color:"orange", fontSize:"1.5rem"}} />) || 
+        (batteryStatus > 6.5 && batteryStatus <= 8 && <MdBatteryCharging80 className="batteryIcons" style={{color:"green", fontSize:"1.5rem"}} />) || 
+        (batteryStatus > 8 && batteryStatus <= 9.9 && <MdBatteryCharging90 style={{color:"green", fontSize:"1.5rem"}} />) || 
+        (batteryStatus === 10 && <MdBatteryChargingFull className="batteryIcons" style={{color:"green", fontSize:"1.5rem"}}/>)
+      ) : (
+        <MdBatteryChargingFull className="batteryIcons" style={{color:"green", fontSize:"1.5rem"}}/>
+      );
+    },
+  },
+  
   
   {
     Header: 'In Area',

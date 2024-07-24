@@ -50,15 +50,15 @@ export const BasicSpeedDial = () => {
         icon={<SpeedDialIcon />}
         FabProps={{
           sx: {
-            backgroundColor: '#2c3e50',
+            backgroundColor: '#000000',
             '&:hover': {
-              backgroundColor: '#2c3e50', // Keep the hover color yellow
+              backgroundColor: '#000000', // Keep the hover color yellow
             },
             '&.Mui-focused': {
-              backgroundColor: '#2c3e50', // Keep the focused color yellow
+              backgroundColor: '#000000', // Keep the focused color yellow
             },
             '&.Mui-active': {
-              backgroundColor: '#2c3e50', // Keep the active color yellow
+              backgroundColor: '#000000', // Keep the active color yellow
             },
           },
         }}

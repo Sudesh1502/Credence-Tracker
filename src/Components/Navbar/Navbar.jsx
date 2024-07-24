@@ -75,7 +75,7 @@ export const Navbar = (props) => {
   }
 
   return (
-    <><AppBar position="fixed" sx={{ zIndex: 1301, backgroundColor: '#2c3e50' }}>
+    <><AppBar position="fixed" sx={{ zIndex: 1301, backgroundColor: '#000000' }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Link to={'/'}>
@@ -205,7 +205,9 @@ export const Navbar = (props) => {
           <RedAlertZone />
         </MuiBox>
       </Modal>
-    </AppBar></>
+    </AppBar>
+    <hr style={{color:"white"}} />
+    </>
   );
 };
 

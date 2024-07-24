@@ -65,7 +65,7 @@ export const CreateLandmark = () => {
         variant="contained"
         onClick={() => setModalOpen(true)}
         sx={{
-          backgroundColor: '#2c3e50',
+          backgroundColor: '#000000',
           '&:hover': {
             backgroundColor: '#1a242f',
           },
@@ -90,7 +90,7 @@ export const CreateLandmark = () => {
         variant="contained"
         onClick={() => setModalOpen(true)}
         sx={{
-          backgroundColor: '#2c3e50',
+          backgroundColor: '#000000',
           '&:hover': {
             backgroundColor: '#1a242f',
           },

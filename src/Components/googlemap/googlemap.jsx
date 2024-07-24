@@ -57,7 +57,7 @@ function GoogleMapComponent({ latitude, longitude, data}) {
 
   const [vehicleData, setVehicleData] = useState([]);
   const [center, setCenter] = useState(initialCenter);
-  const ZOOM_LEVEL = 20;  // Maximum zoom level
+  const ZOOM_LEVEL = 13;  // Maximum zoom level
   const mapRef = useRef();
 
 
@@ -122,7 +122,7 @@ function GoogleMapComponent({ latitude, longitude, data}) {
         center={center}
         zoom={7} // Initial zoom level
         ref={mapRef}
-        style={{ height: "500px", width: "1000px" }}
+        style={{ height: "500px", width: "99vw", border:"2px solid black", marginBottom:"35px"}}
       >
         <TileLayer url={osmProvider.url} attribution={osmProvider.attribution} />
         
@@ -148,7 +148,7 @@ function GoogleMapComponent({ latitude, longitude, data}) {
                     <div className="name"><p >{vehicle.name}</p></div>
                   </div>
                   
-                  <GeoFencing />
+                  
                 </div >
                   <div className="popupInfo">
                     <PopupElement icon={<MdLocationPin style={{color:"#d53131"}} />} text={vehicle.address} />
@@ -159,7 +159,9 @@ function GoogleMapComponent({ latitude, longitude, data}) {
                     {/* <PopupElement icon={<FaRegSnowflake style={{color:"#aa9d6f"}} />} text="Ac off" /> */}
                     <PopupElement icon={<BsFillFuelPumpFill style={{color:"#5fb1fe"}} />} text="0.00 L" />
                   </div>
+                  <GeoFencing className="geoFence" />
                 </div>
+                
               </Popup>
             </Marker>
           ) : null
