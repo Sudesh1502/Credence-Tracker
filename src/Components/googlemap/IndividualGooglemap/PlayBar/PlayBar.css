@@ -138,14 +138,14 @@ input[type="range"]:active::-webkit-slider-thumb {
   margin-top: 5px;
   /* margin-right: 100px; */
   align-self: right;
-  padding: 13px 15px;
+  padding: 10px 15px;
   font-size: 1rem;
   font-weight: 600;
   border-radius: 6px;
   border: none;
   background-color: #000000;
   color: #ffffff;
-  font-size: 1rem;
+  font-size: 0.975rem;
   width:6rem;
 }
 

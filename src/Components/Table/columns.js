@@ -16,7 +16,7 @@ import Battery6BarIcon from '@mui/icons-material/Battery6Bar';
 import BatteryFullIcon from '@mui/icons-material/BatteryFull';
 import moment from 'moment-timezone';
 import { PiPowerFill } from "react-icons/pi";
-
+import { MdGpsNotFixed } from 'react-icons/md';
 
 // Define a component to fetch and display the address
 export const AddressFetcher = ({ lat, lng }) => {
@@ -54,6 +54,25 @@ export const AddressFetcher = ({ lat, lng }) => {
 
   return <span>{address}</span>;
 };
+
+function IconWithText({ text }) {
+  return (
+    <div style={{ position: 'relative', display: 'inline-block', width: '24px', height: '24px' }}>
+      <MdGpsNotFixed style={{ fontSize: '24px' }} />
+      <span style={{
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        color: '#000000',
+        fontSize: '12px',
+        fontWeight: 'bold'
+      }}>
+        {text}
+      </span>
+    </div>
+  );
+}
 
 // Define your columns array
 export const COLUMNS = [
@@ -111,7 +130,7 @@ export const COLUMNS = [
     accessor: 'speed'
   },
   {
-    Header: 'Current Distance(KM)',
+    Header: 'Kilometers',
     accessor: row => row.attributes?.distance ?? null,
     Cell: ({ row }) => {
       const mileage = row.attributes?.distance;
@@ -171,12 +190,11 @@ export const COLUMNS = [
     accessor: row => row.attributes?.sat ?? null,
     Cell: ({ row }) => {
       const SatStatus = row.attributes?.sat;
-      return SatStatus ;
-      
+      return <IconWithText text={SatStatus} />;
     },
   },
   {
-    Header: 'Battery',
+    Header: 'Power',
     accessor: row => row.attributes?.battery ?? null,
     Cell: ({ row }) => {
       const batteryStatus = row.attributes?.battery;

@@ -1,6 +1,9 @@
 .DateRangePicker_picker__directionLeft {
   z-index: 9999 !important;
 }
+.css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input {
+  padding:11px 14px !important;
+}
 .mapContainer {
   display: flex;
   align-items: center;
@@ -43,7 +46,7 @@
   flex-direction: column;
   align-items: center;
   /* background-color: black; */
-  padding-top: 30px;
+  /* padding-top: 30px; */
 }
 
 .leaflet-popup-content-wrapper {

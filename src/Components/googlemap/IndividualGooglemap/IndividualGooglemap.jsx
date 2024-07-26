@@ -14,12 +14,20 @@ import L from "leaflet";
 import IndividualNav from "./individualNav/IndividualNav.jsx";
 import IndividualInfo from "./IndividualInfo/IndividualInfo";
 import PlayBar from "./PlayBar/PlayBar.jsx";
+
 import carIcon from "../SVG/Car/C1.svg";
 import motorcycleIcon from "../SVG/Bike/bike1.svg";
+import JCBIcon from "../SVG/JCB1/j3.svg";
 import truckIcon from "../SVG/Truck/b1.svg";
-import truckIconTop from "../SVG/Truck/b1.svg";
-import motorcycleIconTop from "../SVG/Truck/b1.svg";
-import carIconTop from "../SVG/Truck/b1.svg";
+import autoIcon from "../SVG/Auto/a4.svg";
+
+
+import truckIconTop from "../SVG/Vehicle Top View/Truck/Truck-Y.png";
+import motorcycleIconTop from "../SVG/Vehicle Top View/Bike/Bike-R.png";
+import carIconTop from "../SVG/Vehicle Top View/Car/Car-R.png";
+import JCBIconTop from "../SVG/Vehicle Top View/JCB/JCB-Y.png";
+import TractorIconTop from "../SVG/Vehicle Top View/Tractor/Tractor-G.png";
+import AutoIconTop from "../SVG/Vehicle Top View/Auto/Auto-O.png";
 
 
 import pointerIcon from "../SVG/pointer.svg";
@@ -36,6 +44,10 @@ import dayjs from "dayjs";
 import GeoFencing from "../../GeoFencing/GeoFencing.jsx";
 import Calender from "./Calender.jsx";
 import { Button } from "@mui/material";
+import Loader from "../../Loader/Loader.jsx";
+import AnimeLoader from "../../Loader/AnimeLoader.jsx";
+
+import loadingPerson from "../../../assets/LoadingPerson.json"
 
 const car = new L.Icon({
   iconUrl: carIcon,
@@ -51,6 +63,64 @@ const truck = new L.Icon({
 });
 const motorcycle = new L.Icon({
   iconUrl: motorcycleIcon,
+  iconSize: [35, 45],
+  iconAnchor: [17, 45],
+  popupAnchor: [0, -30],
+});
+
+const auto = new L.Icon({
+  iconUrl: autoIcon,
+  iconSize: [35, 45],
+  iconAnchor: [17, 45],
+  popupAnchor: [0, -30],
+});
+
+const jcb = new L.Icon({
+  iconUrl: JCBIcon,
+  iconSize: [35, 45],
+  iconAnchor: [17, 45],
+  popupAnchor: [0, -30],
+});
+
+// TOP VIEW ICONS ===============================
+
+const jcbTop = new L.Icon({
+  iconUrl: JCBIconTop,
+  iconSize: [35, 45],
+  iconAnchor: [17, 45],
+  popupAnchor: [0, -30],
+});
+
+const autoTop = new L.Icon({
+  iconUrl: AutoIconTop,
+  iconSize: [35, 45],
+  iconAnchor: [17, 45],
+  popupAnchor: [0, -30],
+});
+
+const tractorTop = new L.Icon({
+  iconUrl: TractorIconTop,
+  iconSize: [35, 45],
+  iconAnchor: [17, 45],
+  popupAnchor: [0, -30],
+});
+
+const truckTop = new L.Icon({
+  iconUrl: truckIconTop,
+  iconSize: [35, 45],
+  iconAnchor: [17, 45],
+  popupAnchor: [0, -30],
+});
+
+const carTop = new L.Icon({
+  iconUrl: carIconTop,
+  iconSize: [35, 45],
+  iconAnchor: [17, 45],
+  popupAnchor: [0, -30],
+});
+
+const motorcycleTop = new L.Icon({
+  iconUrl: motorcycleIconTop,
   iconSize: [35, 45],
   iconAnchor: [17, 45],
   popupAnchor: [0, -30],
@@ -104,6 +174,26 @@ function IndividualGooglemap({ data, setIndividualMap, individualDataObj }) {
   const [points, setPoints] = useState([]);
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState("");
+
+
+  const getIconByCategoryTop = (category) => {
+    switch (category) {
+      case "car":
+        return carTop;
+      case "truck":
+        return truckTop;
+      case "motorcycle":
+        return motorcycleTop;
+      case "auto":
+        return autoTop;
+      case "tractor":
+        return tractorTop;
+      case "jcb":
+        return jcbTop;
+      default:
+        return carTop;
+    }
+  };
 
   //polyline points for live tracking
   useEffect(() => {
@@ -219,6 +309,10 @@ function IndividualGooglemap({ data, setIndividualMap, individualDataObj }) {
         return truck;
       case "motorcycle":
         return motorcycle;
+      case "auto":
+        return auto;
+      case "jcb":
+        return jcb;
       default:
         return car;
     }
@@ -371,7 +465,7 @@ function IndividualGooglemap({ data, setIndividualMap, individualDataObj }) {
                   backgroundColor: "#1a242f",
                 },
               }}
-              style={{ height: "3.3rem", marginTop: "5px" }}
+              style={{ height: "2.7rem", marginTop: "6px" }}
               onClick={fetchPlaybackData}
             >
               Search
@@ -387,7 +481,7 @@ function IndividualGooglemap({ data, setIndividualMap, individualDataObj }) {
         <br />
         {isPlaybacking &&
           (!playbackData || !geofenceData || !stoppedPositions) &&
-          wait}
+          <AnimeLoader message={"We appreciate your patience..."}/>}
 
         <div className="mapContainer">
           <MapContainer
@@ -397,9 +491,10 @@ function IndividualGooglemap({ data, setIndividualMap, individualDataObj }) {
             style={{
               height: "500px",
               width: "99vw",
-              border: "2px solid black",
-              borderRadius: "6px",
+              border: "2px solid rgb(140 133 118)",
+              // borderRadius: "6px",
               marginBottom: "35px",
+              marginLeft:"0.75px",
             }}
           >
             <TileLayer
@@ -464,7 +559,7 @@ function IndividualGooglemap({ data, setIndividualMap, individualDataObj }) {
             {isAnimating && animatedMarkerPosition && (
               <Marker
                 position={animatedMarkerPosition}
-                icon={getIconByCategory(individualDataObj.category)}
+                icon={getIconByCategoryTop(individualDataObj.category)}
               />
             )}
             {isPlaybacking && <Polyline positions={pairedArray} color="blue" />}
@@ -525,7 +620,7 @@ function IndividualGooglemap({ data, setIndividualMap, individualDataObj }) {
               })}
           </MapContainer>
         </div>
-        <button
+        {/* <button
           onClick={() => {
             showMyLocation(
               individualDataObj.latitude,
@@ -534,10 +629,12 @@ function IndividualGooglemap({ data, setIndividualMap, individualDataObj }) {
           }}
         >
           Get Me
-        </button>
+        </button> */}
         <div className="InfoContainer">
           {showPlayBar ? null : (
             <IndividualNav
+
+            showMyLocation={showMyLocation}
               setIndividualMap={setIndividualMap}
               setShowPlayBar={setShowPlayBar}
               individualDataObj={individualDataObj}

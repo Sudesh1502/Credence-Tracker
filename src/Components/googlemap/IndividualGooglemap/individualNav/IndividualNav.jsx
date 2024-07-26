@@ -1,7 +1,7 @@
 import "./IndividualNav.css";
 import Button from "@mui/material/Button";
 
-const IndividualNav = ({ setIndividualMap, setShowPlayBar, individualDataObj, setIsCalender}) => {
+const IndividualNav = ({ showMyLocation, setIndividualMap, setShowPlayBar, individualDataObj, setIsCalender}) => {
   const handleClose = () => {
     setIndividualMap(false);
     
@@ -23,6 +23,10 @@ const IndividualNav = ({ setIndividualMap, setShowPlayBar, individualDataObj, se
             "&:hover": {
               backgroundColor: "#1a242f",
             },
+          }}
+
+          onClick={()=>{
+            showMyLocation(individualDataObj.latitude, individualDataObj.longitude);
           }}
         >
           Track

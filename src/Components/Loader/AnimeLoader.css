@@ -1,0 +1,18 @@
+.lottie-container {
+    width: 10rem; /* Adjust the size as needed */
+    height: 10rem; /* Adjust the size as needed */
+  }
+  
+  .animation {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+  
+  .message {
+    font-size: 0.875rem; /* Small font size */
+    color: #555; /* Subtle color for better readability */
+    margin-top: 1rem; /* Space between animation and text */
+    text-align: center;
+  }
+  

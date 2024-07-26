@@ -29,6 +29,7 @@ import ChangePassword from '../ChangePassword.jsx';
 import LockResetTwoToneIcon from '@mui/icons-material/LockResetTwoTone';
 import { Login } from '@mui/icons-material';
 import {Link} from 'react-router-dom';
+import "./Navbar.css";
 
 
 const pages = [
@@ -75,7 +76,7 @@ export const Navbar = (props) => {
   }
 
   return (
-    <><AppBar position="fixed" sx={{ zIndex: 1301, backgroundColor: '#000000' }}>
+    <><AppBar position="fixed" sx={{ zIndex: 1301, background: "linear-gradient(135deg, #000000 25%, #434343 50%, #000000 75%)", }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Link to={'/'}>
@@ -138,12 +139,15 @@ export const Navbar = (props) => {
                 transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                 alignItems={{ horizontal: 'right' }}
-              ><div style={{background: 'linear-gradient(to right, #2c3e50, #828b94)'}}>
+              ><div style={{
+                height: "4rem",
+                display: "flex",
+                alignItems: "center",
+                background: "linear-gradient(135deg, #000000 25%, #434343 50%, #000000 75%)",
+                color:"white"
+            }} >
                 <MenuItem onClick={handleClose}>
-                  <Avatar /> Profile
-                </MenuItem>
-                <MenuItem onClick={handleClose}>
-                  <Avatar /> My account
+                  <Avatar sytle={{marginRight:"5px"}} /> Profile
                 </MenuItem>
                 </div>
                 <Divider />

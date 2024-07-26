@@ -34,6 +34,15 @@ import {
 } from "@mui/material";
 import IndividualGooglemap from "../googlemap/IndividualGooglemap/IndividualGooglemap.jsx";
 import "./table.css";
+import Loader from "../Loader/Loader.jsx";
+import AnimeLoader from "../Loader/AnimeLoader.jsx";
+
+//===================================================================================================================
+//ANIMATION==========================================================================================================
+
+
+import loadingPerson from "../../assets/LoadingPerson.json"
+import waitingPerson from "../../assets/waitingPerson.json"
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -240,9 +249,9 @@ export const Tablee = ({ data }) => {
     setAssetDetailsModalOpen(true);
   };
 
-  const handleLocationClick = (latitude, longitude,row) => {
+  const handleLocationClick = (latitude, longitude, row) => {
     setIndividualMap(true);
-    console.log("I am row .........................   ",row)
+    console.log("I am row .........................   ", row);
     setLati(latitude);
 
     setLongi(longitude);
@@ -320,18 +329,19 @@ export const Tablee = ({ data }) => {
 
   return (
     <>
+      {/* {data?<Loader/>:<></>} */}
       <div style={{ marginTop: "-13px" }}>
         {individualMap ? (
           <></>
         ) : (
           <>
-            <hr />
+            {/* <hr /> */}
             <div
               style={{
                 display: "flex",
                 gap: "16px",
                 marginBottom: "20px",
-                padding: "0 20px",
+                padding: "0 5px",
               }}
             >
               <FormControl
@@ -562,7 +572,7 @@ export const Tablee = ({ data }) => {
               display: "flex",
               alignItems: "center",
               marginBottom: "15px",
-              marginLeft: "3.5rem",
+              marginLeft: "-0.5rem",
             }}
           >
             <TextField
@@ -592,7 +602,7 @@ export const Tablee = ({ data }) => {
               variant="contained"
               onClick={() => setModalOpen(true)}
               sx={{
-                backgroundColor: "#000000",
+                background: "linear-gradient(135deg, #000000 25%, #434343 50%, #000000 75%)",
                 "&:hover": {
                   backgroundColor: "#1a242f",
                 },
@@ -609,8 +619,26 @@ export const Tablee = ({ data }) => {
         {individualMap ? (
           <></>
         ) : (
-          <Paper sx={{ width: "100%", overflow: "hidden", marginTop: "16px" , display:"flex", justifyContent:"center", flexDirection:"column", alignItems:"center"}}>
-            <TableContainer sx={{ maxHeight: "100%", width:"90%", borderRight:"2px solid black",borderTop:"2px solid black", borderRadius:"5px" }}>
+          <Paper
+            sx={{
+              width: "100%",
+              overflow: "hidden",
+              marginTop: "16px",
+              display: "flex",
+              justifyContent: "center",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <TableContainer
+              sx={{
+                maxHeight: "100%",
+                width: "100%",
+                borderRight: "2px solid black",
+                borderTop: "2px solid black",
+                borderRadius: "5px",
+              }}
+            >
               <Table stickyHeader aria-label="sticky table">
                 <TableHead>
                   <TableRow>
@@ -620,7 +648,7 @@ export const Tablee = ({ data }) => {
                       style={{
                         minWidth: 50,
                         borderRight: "1px solid #ddd",
-                        backgroundColor: "#000000",
+                        background: "linear-gradient(135deg, #000000 25%, #434343 50%, #000000 75%)",
                         color: "white",
                       }}
                     >
@@ -630,6 +658,7 @@ export const Tablee = ({ data }) => {
                         onChange={handleSelectAll}
                       />
                     </TableCell>
+                    {columns ? <></> : <Loader />}
                     {columns.map(
                       (column) =>
                         column.accessor !== "select" &&
@@ -644,7 +673,7 @@ export const Tablee = ({ data }) => {
                             style={{
                               minWidth: column.minWidth,
                               borderRight: "1px solid #ddd",
-                              backgroundColor: "#000000",
+                              background: "linear-gradient(135deg, #000000 25%, #434343 50%, #000000 75%)",
                               color: "white",
                             }}
                           >
@@ -684,95 +713,91 @@ export const Tablee = ({ data }) => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {sortedData
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row, index) => (
-                      <TableRow
-                        hover
-                        role="checkbox"
-                        tabIndex={-1}
-                        key={row.id}
-                        style={{
-                          backgroundColor:
-                            index % 2 === 0 ? "white" : "#f9f9f9",
-                        }}
-                        onClick={() => {
-                          
-                            handleData(
-                              row.latitude,
-                              row.longitude,
-                              data
-                            );
-
-                            handleLocationClick(
-                              row.latitude,
-                              row.longitude
-                            );
-                         
-                          
-                        }}
-                      >
-                        <TableCell className="tablecell"
-                          key={`select-${index}`}
-                          align="left"
+                  {!sortedData || sortedData.length === 0 ? (
+                    <AnimeLoader message={"Please hold on while we retrieve your information..."}/>
+                  ) : (
+                    sortedData
+                      .slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage
+                      )
+                      .map((row, index) => (
+                        <TableRow
+                          hover
+                          role="checkbox"
+                          tabIndex={-1}
+                          key={row.id}
                           style={{
-                            borderRight: "1px solid #ddd",
+                            backgroundColor:
+                              index % 2 === 0 ? "white" : "#f9f9f9",
+                          }}
+                          onClick={() => {
+                            handleData(row.latitude, row.longitude, data);
+                            handleLocationClick(row.latitude, row.longitude);
                           }}
                         >
-                          <input
-                            type="checkbox"
-                            checked={row.isSelected}
-                            onChange={() => handleRowSelect(index)}
-                          />
-                        </TableCell>
-                        {columns.map(
-                          (column) =>
-                            column.accessor !== "select" &&
-                            columnVisibility[column.accessor] && (
-                              <TableCell className="tablecell"
-                                key={column.accessor}
-                                align={
-                                  column.accessor === "date_of_birth"
-                                    ? "right"
-                                    : "left"
-                                }
-                                style={{
-                                  borderRight: "1px solid #ddd",
-                                  cursor:
-                                    column.accessor === "location"
-                                      ? "pointer"
-                                      : "default", 
-                                }}
-                                onClick={() => {
-                                  if (column.accessor === "location") {
-                                    handleData(
-                                      row.latitude,
-                                      row.longitude,
-                                      data
-                                    );
-
-                                    handleLocationClick(
-                                      row.latitude,
-                                      row.longitude,
-                                      row
-                                      
-                                    );
-                                  } else if (column.accessor === "name") {
-                                    handleVehicleClick();
+                          <TableCell
+                            className="tablecell"
+                            key={`select-${index}`}
+                            align="left"
+                            style={{
+                              borderRight: "1px solid #ddd",
+                            }}
+                          >
+                            <input
+                              type="checkbox"
+                              checked={row.isSelected}
+                              onChange={() => handleRowSelect(index)}
+                            />
+                          </TableCell>
+                          {columns.map(
+                            (column) =>
+                              column.accessor !== "select" &&
+                              columnVisibility[column.accessor] && (
+                                <TableCell
+                                  className="tablecell"
+                                  key={column.accessor}
+                                  align={
+                                    column.accessor === "date_of_birth"
+                                      ? "right"
+                                      : "left"
                                   }
-                                }}
-                              >
-                                {column.Cell
-                                  ? column.Cell({
-                                      value: row[column.accessor],
-                                      row,
-                                    })
-                                  : row[column.accessor]}
-                              </TableCell>
-                            )
-                        )}
-                      </TableRow>
-                    ))}
+                                  style={{
+                                    borderRight: "1px solid #ddd",
+                                    cursor:
+                                      column.accessor === "location"
+                                        ? "pointer"
+                                        : "default",
+                                  }}
+                                  onClick={() => {
+                                    if (column.accessor === "location") {
+                                      handleData(
+                                        row.latitude,
+                                        row.longitude,
+                                        data
+                                      );
+                                      handleLocationClick(
+                                        row.latitude,
+                                        row.longitude,
+                                        row
+                                      );
+                                    } else if (column.accessor === "name") {
+                                      handleVehicleClick();
+                                    }
+                                  }}
+                                >
+                                  {column.Cell
+                                    ? column.Cell({
+                                        value: row[column.accessor],
+                                        row,
+                                      })
+                                    : row[column.accessor]}
+                                </TableCell>
+                              )
+                          )}
+                        </TableRow>
+                      ))
+                  )}
                 </TableBody>
               </Table>
             </TableContainer>
@@ -802,7 +827,7 @@ export const Tablee = ({ data }) => {
             onClick={handleExport}
             sx={{
               marginRight: "10px",
-              backgroundColor: "#000000",
+              background: "linear-gradient(135deg, #000000 25%, #434343 50%, #000000 75%)",
               "&:hover": {
                 backgroundColor: "#1a242f",
               },

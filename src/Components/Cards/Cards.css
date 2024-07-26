@@ -1,3 +1,21 @@
 .css-r9quoh-MuiTypography-root {
-font-size: 0.875rem;
+font-size: 1.1rem !important;
+}
+
+
+.css-6eexb8, .css-gw46qk, .css-n8m8f2, .css-1jaz6r9, .css-15ytqy5, .css-583m87  {
+    width: 100%;
+}
+
+.css-7059t1-MuiTypography-root, .css-kk5sjt-MuiTypography-root,.css-k11w6e-MuiTypography-root, .css-1ct9o1h-MuiTypography-root, .css-kk5sjt-MuiTypography-root, .css-13egbj1-MuiTypography-root, .css-riatg7-MuiTypography-root {
+    margin-top: 1rem !important;
+    font-size: 1.1rem !important;
+}   
+
+.css-fpqqwi-MuiCardContent-root:last-child {
+    
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+
 }
