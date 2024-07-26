@@ -1,8 +1,7 @@
-
 export const COLUMNS = [
     {
       Header: 'Vehicle',
-      accessor: 'name',
+      accessor: '',
     },
     {
       Header: '14/06/2024',

@@ -1,16 +1,15 @@
-
 export const COLUMNS = [
     {
       Header: 'Vehicle',
-      accessor: 'name',
+      accessor: 'wsdfad',
     },
     {
       Header: '14/06/2024',
-      accessor: ''
+      accessor: 'asda'
     },
     {
       Header: 'Total Distance',
-      accessor: ''
+      accessor: 'wfwe'
     }
   ];
   

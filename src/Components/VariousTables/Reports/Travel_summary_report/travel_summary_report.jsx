@@ -15,7 +15,7 @@ import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Switch from "@mui/material/Switch";
-// import { COLUMNS } from "./columns";
+import { COLUMNS } from "./columns";
 import MOCK_DATA from "./MOCK_DATA.json";
 import * as XLSX from "xlsx";
 import ImportExportIcon from "@mui/icons-material/ImportExport";
@@ -60,23 +60,7 @@ const style = {
   flexDirection: "column",
 };
 
-const COLUMNS = [
-  {
-    Header: 'Vehicle',
-    accessor: 'name',
-  },
-  {
-    Header: '14/06/2024',
-    accessor: ''
-  },
-  {
-    Header: 'Total Distance',
-    accessor: ''
-  }
-];
-
-
-export const DistanceReport = ({ data }) => {
+export const TravelSummaryReport = ({ data }) => {
   // console.log(data);
   const [page, setPage] = useState(0);
   const [individualDataObj,setIndividualDataObj] = useState({});
@@ -113,6 +97,7 @@ export const DistanceReport = ({ data }) => {
   const [latitude, setLatitude] = useState([]);
   const [longitude, setLongitude] = useState([]);
   const [addressesValue, setAddressesValue] = useState();
+
   const [locationModalOpen, setLocationModalOpen] = useState(false);
   const [lati, setLati] = useState(0);
   const [longi, setLongi] = useState(0);
@@ -121,63 +106,19 @@ export const DistanceReport = ({ data }) => {
   const [lng, setLng] = useState(0);
   const [startDateTimeValue, setStartDateTimeValue] = useState(null);
   const [endDateTimeValue, setEndDateTimeValue] = useState(null);
-  const [historyData, setHistoryData] = useState(null);
-  const [statusValue, setStatusValue] = useState("");
-  const [dateRangeArray, setDateRangeArray] = useState([]);
 
 
+  const handleDateTimeChange = (newValue) => {
+      const formattedStartDateTime = newValue[0] ? dayjs(newValue[0]).toISOString() : null;
+      const formattedEndDateTime = newValue[1] ? dayjs(newValue[1]).toISOString() : null;
+  
+      setStartDateTimeValue(formattedStartDateTime);
+      setEndDateTimeValue(formattedEndDateTime);
+    };
 
-  console.log('vehiclesValue',vehiclesValue);
-
-  const fetchPlaybackData = async () => {
-    console.log("Getting your playback");
-    
-    try {
-      const username = "hbgadget221@gmail.com";
-      const password = "123456";
-      const token = btoa(`${username}:${password}`);
-      const response1 = await axios.get(`
-        https://rocketsalestracker.com/api/positions?deviceId=${vehiclesValue}&from=${startDateTimeValue}&to=${endDateTimeValue}`,
-        {
-          headers: {
-            Authorization: `Basic ${token}`,
-          },
-        }
-      );
-      setHistoryData(response1.data);
-    } catch (error) {
-      console.error("Error fetching device data:", error);
-    }}
-console.log('historyData', historyData);
-console.log('startDateTimeValue',startDateTimeValue);
-console.log('endDateTimeValue',endDateTimeValue);
-
-const handleDateTimeChange = (newValue) => {
-  // Ensure to set the end time to the end of the day for proper range handling
-  const formattedStartDateTime = newValue[0] ? dayjs(newValue[0]).startOf('day').toISOString() : null;
-  const formattedEndDateTime = newValue[1] ? dayjs(newValue[1]).endOf('day').toISOString() : null;
-
-  setStartDateTimeValue(formattedStartDateTime);
-  setEndDateTimeValue(formattedEndDateTime);
-
-  // Calculate the date range array
-  if (formattedStartDateTime && formattedEndDateTime) {
-    const start = dayjs(formattedStartDateTime);
-    const end = dayjs(formattedEndDateTime);
-    const dateArray = [];
-
-    for (let current = start; current.isBefore(end) || current.isSame(end); current = current.add(1, 'day')) {
-      dateArray.push(current.toISOString());
-    }
-
-    setDateRangeArray(dateArray);
-  }
-};
-    const dateOnlyArray = dateRangeArray.map(dateTime => dateTime.split('T')[0]);
-console.log("dateOnlyArray",dateOnlyArray);
   useEffect(() => {
-    if(historyData){setFilteredRows(historyData.map((row) => ({ ...row, isSelected: false })));}
-  }, [historyData]);
+    setFilteredRows(data.map((row) => ({ ...row, isSelected: false })));
+  }, [data]);
 
   useEffect(() => {
     setLatitude(data.map((row) => row.latitude));
@@ -209,7 +150,29 @@ console.log("dateOnlyArray",dateOnlyArray);
 
 
 
+  useEffect(()=>{
+    const running = data.filter((row)=>row.speed>0).length;
+    setVehicleRunningCount(running);
 
+    const stopped = data.filter((row)=>row.speed===0 && row.status==='offline').length;
+    setVehicleStoppedCount(stopped);
+
+    const overspeed = data.filter((row)=>row.speed>140).length;
+    setVehicleOverspeedCount(overspeed);
+
+    const idle = data.filter((row)=>row.speed===0 && row.status==='online').length;
+    setVehicleIdleCount(idle);
+
+    const currentTime = new Date();
+    const twelveHoursInMilliseconds = 12 * 60 * 60 * 1000;
+
+    const unreachable = data.filter((row) => 
+      row.status === 'offline' && 
+        currentTime - new Date(row.lastUpdate) >twelveHoursInMilliseconds
+    ).length;
+
+    setVehicleUnreachableCount(unreachable);
+  },[data])
 
   useEffect(() => {
     const getAddressFromLatLng = async (lat, lng) => {
@@ -359,25 +322,19 @@ console.log("dateOnlyArray",dateOnlyArray);
     });
   }
 
-  const generateColumns = (dates) => {
-    const staticColumns = [
-      { Header: 'Vehicle', accessor: 'jhvkh' },
-      { Header: 'Total Distance', accessor: 'jhvjh' }
-    ];
-  
-    const dateColumns = dates.map(date => ({
-      Header: date,
-      accessor: date
-    }));
-  
-    return [...staticColumns, ...dateColumns];
-  };
-  
-  const [columns, setColumns] = useState(generateColumns(dateOnlyArray));
-
-  useEffect(() => {
-    setColumns(generateColumns(dateOnlyArray));
-  }, [dateOnlyArray]);
+  const columns = COLUMNS.map((col) => ({
+    ...col,
+    Cell:
+      col.accessor === "select"
+        ? ({ row }) => (
+            <input
+              type="checkbox"
+              checked={row.original.isSelected}
+              onChange={() => handleRowSelect(row.index)}
+            />
+          )
+        : col.Cell,
+  }));
 
   return (
     <>
@@ -390,7 +347,6 @@ console.log("dateOnlyArray",dateOnlyArray);
           />
         </DemoContainer>
       </LocalizationProvider>
-      <button onClick={fetchPlaybackData}>Search</button>
  <div style={{ marginTop: "5px" }}>
         {
           
@@ -417,30 +373,11 @@ console.log("dateOnlyArray",dateOnlyArray);
   label="Select Asset Status"
 >
   {data && data.length > 0 && data.map((row, index) => (
-    <MenuItem key={index} value={row.deviceId}>
+    <MenuItem key={index} value={row.name}>
       {row.name}
     </MenuItem>
-    
   ))}
 </Select>
-
-<Select
-              labelId="Status"
-              id="Status"
-              value={statusValue}
-              onChange={(e) => setStatusValue(e.target.value)}
-              label="Select Status"
-            >
-              <MenuItem value="Ignition on">Ignition on</MenuItem>
-              <MenuItem value="Ignition off">Ignition off</MenuItem>
-              <MenuItem value="Idol">
-                Idol
-              </MenuItem>
-              <MenuItem value="Overspeed">
-                Overspeed
-              </MenuItem>
-              
-            </Select>
 
           </FormControl>
         </div>
