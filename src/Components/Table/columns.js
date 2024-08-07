@@ -58,11 +58,11 @@ export const AddressFetcher = ({ lat, lng }) => {
 function IconWithText({ text }) {
   return (
     <div style={{ position: 'relative', display: 'inline-block', width: '24px', height: '24px' }}>
-      <MdGpsNotFixed style={{ fontSize: '24px' }} />
+      <MdGpsNotFixed style={{ fontSize: '28px' }} />
       <span style={{
         position: 'absolute',
-        top: '50%',
-        left: '50%',
+        top: '60%',
+        left: '54%',
         transform: 'translate(-50%, -50%)',
         color: '#000000',
         fontSize: '12px',
@@ -74,19 +74,17 @@ function IconWithText({ text }) {
   );
 }
 
+
+
+
 // Define your columns array
+
+let  sn  = 0;
 export const COLUMNS = [
   {
     Header: 'SN',
-    accessor: 'deviceId',
-    Cell: ({ value }) => {
-      switch (value) {
-        case 7: return '1';
-        case 9: return '2';
-        case 1685: return '3';
-        default: return null;
-      }
-    }
+    accessor: 'serialNumber',
+    Cell: ({ row }) => (row.index + 1).toString()  // Serial number starts from 1
   },
   
   {

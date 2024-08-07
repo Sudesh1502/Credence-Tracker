@@ -1,6 +1,6 @@
-.container {
+.containerPlay {
   width: 100%;
-  background-color: #fff;
+  background-color: transparent;
   color: black;
   display: flex;
   align-items: flex-start;
@@ -9,6 +9,7 @@
   height: 8rem;
   flex-direction: column;
   gap: 27px;
+  margin-top: 15px;
 }
 .container::-webkit-scrollbar {
   display: none;
@@ -17,13 +18,16 @@ hr {
   width: 100%;
 }
 .playbar-container {
-  background-color: #ffffff;
+  /* background-color: #ffffff; */
   /* width: 100%; */
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-around;
   /* padding: 30px 20px 5px 20px; */
   gap: 1.2rem;
+  border-radius: 51px;
+  background-color: #f4e4c1;
+  padding: 10px 13px;
 }
 
 .playbar-break {
@@ -124,12 +128,12 @@ input[type="range"]:active::-webkit-slider-thumb {
 
 .headData {
   padding: 2px;
-  background-color: #d5d5d5;
+  background-color: #b2aeae;
   /* margin-top: 12px; */
   border-radius: 8px;
   padding-left: 5px;
   padding-right: 5px;
-  color: #565353;
+  color: #221818;
   font-size: 0.8rem;
 }
 
@@ -140,11 +144,11 @@ input[type="range"]:active::-webkit-slider-thumb {
   align-self: right;
   padding: 10px 15px;
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 500;
   border-radius: 6px;
   border: none;
-  background-color: #000000;
-  color: #ffffff;
+  background: linear-gradient(235deg, #f6e5c1, #8d8d8d);
+  color: #000000;
   font-size: 0.975rem;
   width:6rem;
 }

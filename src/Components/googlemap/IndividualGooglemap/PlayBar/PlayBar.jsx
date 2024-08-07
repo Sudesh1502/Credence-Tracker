@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { FaForward, FaPause } from "react-icons/fa6";
 import { FaFastBackward, FaPlay } from "react-icons/fa";
 import { FaFilter } from "react-icons/fa6";
@@ -19,9 +19,26 @@ const PlayBar = ({
   setCurrentIndex,
   setIsAnimating,
   isAnimating,
+  locate,
+  mapRef
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
 
+
+  
+  const showMyLocation = (locate) => {
+    mapRef.current.flyTo(locate, 22, {
+      animate: true,
+      duration: 2,
+    });
+  } ;
+
+
+  const handlePlay = () => {
+    if(locate){
+      showMyLocation(locate);
+    }
+  }
   const togglePlay = () => {
     setIsPlaying(!isPlaying);
     startAnimation();
@@ -57,11 +74,11 @@ const PlayBar = ({
 
   return (
     <>
-      <hr />
+      <hr style={{height:"2px", color:"black"}} />
 
-      <div className="container">
+      <div className="containerPlay">
         <div className="playbar-container">
-        <button type="button" class="btn btn-outline-dark playBar-btn" style={{ marginLeft: "60px" }}>
+        <button type="button" class="btn btn-outline-dark playBar-btn" >
         <FaFilter className="BtnIcon" />
           </button>
          
@@ -73,7 +90,7 @@ const PlayBar = ({
             {isPlaying ? (
               <FaPause className="BtnIcon" />
             ) : (
-              <FaPlay className="BtnIcon" />
+              <FaPlay onClick={handlePlay()} className="BtnIcon" />
             )}
           </button>
           <input
@@ -123,6 +140,7 @@ const PlayBar = ({
           </div>
         </div>
       </div>
+      <hr style={{height:"2px", color:"black"}} />
     </>
   );
 };

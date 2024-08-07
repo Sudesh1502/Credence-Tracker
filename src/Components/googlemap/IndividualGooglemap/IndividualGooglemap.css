@@ -47,6 +47,12 @@
   align-items: center;
   /* background-color: black; */
   /* padding-top: 30px; */
+  border-radius: 8px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #f6e5c1, #c4bfbf);
+  margin: 0px 8px;
+  margin-top: 15px
+  
 }
 
 .leaflet-popup-content-wrapper {

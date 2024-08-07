@@ -76,11 +76,11 @@ export const Navbar = (props) => {
   }
 
   return (
-    <><AppBar position="fixed" sx={{ zIndex: 1301, background: "linear-gradient(135deg, #000000 25%, #434343 50%, #000000 75%)", }}>
+    <><AppBar position="fixed" sx={{ zIndex: 1301, background: "linear-gradient(235deg, #f6e5c1, #8d8d8d)", boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)"}}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Link to={'/'}>
-          <img src='CompanyLogo.png' style={{ height: 40, width: 150 }} /></Link><br/>
+          <img src={"credence tracker-02.png"} style={{ height: 40, width: 128 }} /></Link><br/>
           <Typography variant="h6" sx={{ display: 'flex', alignItems: 'center', flexGrow: 1, marginLeft: '5px' }}>
             
           </Typography>
@@ -90,7 +90,7 @@ export const Navbar = (props) => {
                 key={page.title}
                 sx={{
                   mx: 1,
-                  color: 'white',
+                  color: '#000000',
                   backgroundColor: selectedPage === page.title ? 'rgba(255, 255, 255, 0.2)' : 'transparent'
                 }}
                 onClick={() => handleNavClick(page.arr, page.title)}
@@ -111,7 +111,7 @@ export const Navbar = (props) => {
             </Tooltip>
             <Tooltip title='Refresh Page'>
               <IconButton sx={{ p: 0 }} onClick={() => window.location.reload()}>
-                <LoopSharpIcon style={{ color: 'white' }} />
+                <LoopSharpIcon style={{ color: '#000000' }} />
               </IconButton>
             </Tooltip>
             <Tooltip title="Open settings">
@@ -192,7 +192,7 @@ export const Navbar = (props) => {
       aria-describedby="red-alert-modal-description"
     >
         <MuiBox sx={style}>
-          <div style={{ backgroundColor: '#2c3e50', color: 'white', height: 40, display: 'flex' }}><b style={{ marginLeft: 5 }}>Red Alert Zone</b></div>
+          <div style={{ backgroundColor: '#2c3e50', color: '#000000', height: 40, display: 'flex' }}><b style={{ marginLeft: 5 }}>Red Alert Zone</b></div>
           <Typography id="red-alert-modal-title" variant="h6" component="h2">
             RedZone Time
           </Typography>

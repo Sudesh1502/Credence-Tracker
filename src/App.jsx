@@ -48,6 +48,7 @@ import { UsersAssetsMapping } from "./Components/VariousTables/Master/UsersAsset
 import { EditAreas } from "./Components/VariousTables/Geofencing/EditAreas/EditArea.js";
 import { EditZones } from "./Components/VariousTables/Geofencing/EditZones/EditZones.jsx";
 import { Trips } from "./Components/VariousTables/Geofencing/Trips/Trips.jsx";
+import 'leaflet/dist/leaflet.css';
 // import { AxiosProvider, Request, Get, Delete, Head, Post, Put, Patch, withAxios } from 'react-axios'
 import axios from "axios";
 import { Button } from "@mui/material";
@@ -100,7 +101,7 @@ function App() {
           }
         );
 
-        setDeviceApiData(response1.data); // Update state variable with device API data
+        setDeviceApiData(response1.data); 
       } catch (error) {
         console.error("Error fetching device data:", error);
       }
@@ -108,9 +109,9 @@ function App() {
 
     const fetchPositionData = async () => {
       try {
-        const username = "hbgadget221@gmail.com"; // Replace with your actual username
-        const password = "123456"; // Replace with your actual password
-        const token = btoa(`${username}:${password}`); // Base64 encode the username and password
+        const username = "hbgadget221@gmail.com"; 
+        const password = "123456"; 
+        const token = btoa(`${username}:${password}`); 
 
         const response2 = await axios.get(
           "https://rocketsalestracker.com/api/positions",
@@ -143,10 +144,18 @@ function App() {
         );
         return { ...device, ...position };
       });
-      setMergedData(merged);
-      // setFilteredRows(merged.map(row => ({ ...row, isSelected: false })));
+  
+      // Apply rounding to each item's speed property
+      const roundedMerged = merged.map(item => ({
+        ...item,
+        speed: Math.round(item.speed)
+      }));
+  
+      setMergedData(roundedMerged);
+      // setFilteredRows(roundedMerged.map(row => ({ ...row, isSelected: false })));
     }
   }, [deviceApiData, positionApiData]);
+  
 
   // console.log(mergedData)
 
@@ -266,7 +275,7 @@ function App() {
     <>
     
     {/* {(deviceApiData ? <></>:<Loader/>} */}
-    <div style={{backgroundColor:"#fff"}}>
+    <div style={{background: "linear-gradient(135deg, #f9f7e6, #ffffff)"}}>
       <div style={{ marginLeft: state, marginTop: "24px"}}>
         {/* <FetchData /> */}
         {/* <VehicleDetails /> */}

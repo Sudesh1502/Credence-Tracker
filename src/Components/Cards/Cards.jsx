@@ -15,9 +15,9 @@ export const Cards = ({vehicleRunningCount, vehicleStoppedCount, vehicleOverspee
   return (
     <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', marginBottom:"35px", gap:"25px"}}>
       {/* Running */}
-      <Card sx={{ width: 197, margin: '5px', backgroundColor: "#6c757d", borderRadius:"6px"}}>
+      <Card sx={{ width: 197, margin: '5px', backgroundColor:"#fff", borderRadius:"6px", border:"1px solid black",boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)"}}>
         <CardContent sx={{ padding: '10px' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent:"center", backgroundColor: green[200], padding: '5px', borderRadius: 2, marginBottom: '5px' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent:"center", backgroundColor: green[200], padding: '5px', borderRadius: 2, marginBottom: '5px', width:"100%"}}>
             <AccessTimeIcon sx={{ color: green[500], marginRight: '5px' }} />
             <Typography sx={{ fontSize: "1rem" }}>Running</Typography>
           </Box>
@@ -26,9 +26,9 @@ export const Cards = ({vehicleRunningCount, vehicleStoppedCount, vehicleOverspee
       </Card>
 
       {/* Stopped */}
-      <Card sx={{ width: 197, margin: '5px', backgroundColor: "#6c757d", borderRadius:"6px"}}>
+      <Card sx={{ width: 197, margin: '5px', backgroundColor:"#fff", borderRadius:"6px", border:"1px solid black",boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)"}}>
         <CardContent sx={{ padding: '10px' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', backgroundColor: red[200], padding: '5px', borderRadius: 2, marginBottom: '5px' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent:"center", backgroundColor: red[200], padding: '5px', borderRadius: 2, marginBottom: '5px', width:"100%" }}>
             <StopIcon sx={{ color: red[500], marginRight: '5px' }} />
             <Typography sx={{ fontSize: "1rem" }}>Stopped</Typography>
           </Box>
@@ -37,9 +37,9 @@ export const Cards = ({vehicleRunningCount, vehicleStoppedCount, vehicleOverspee
       </Card>
 
       {/* Overspeed */}
-      <Card sx={{ width: 197, margin: '5px', backgroundColor: "#6c757d", borderRadius:"6px"}}>
+      <Card sx={{ width: 197, margin: '5px', backgroundColor:"#fff", borderRadius:"6px", border:"1px solid black",boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)"}}>
         <CardContent sx={{ padding: '10px' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', backgroundColor: orange[200], padding: '5px', borderRadius: 2, marginBottom: '5px' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent:"center", backgroundColor: orange[200], padding: '5px', borderRadius: 2, marginBottom: '5px', width:"100%" }}>
             <SpeedIcon sx={{ color: orange[500], marginRight: '5px' }} />
             <Typography sx={{ fontSize: "1rem" }}>Overspeed</Typography>
           </Box>
@@ -48,9 +48,9 @@ export const Cards = ({vehicleRunningCount, vehicleStoppedCount, vehicleOverspee
       </Card>
 
       {/* Idle */}
-      <Card sx={{ width: 197, margin: '5px', backgroundColor: "#6c757d", borderRadius:"6px"}}>
+      <Card sx={{ width: 197, margin: '5px', backgroundColor:"#fff", borderRadius:"6px", border:"1px solid black",boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)"}}>
         <CardContent sx={{ padding: '10px' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', backgroundColor: yellow[200], padding: '5px', borderRadius: 2, marginBottom: '5px' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent:"center", backgroundColor: yellow[200], padding: '5px', borderRadius: 2, marginBottom: '5px', width:"100%" }}>
             <HourglassEmptyIcon sx={{ color: yellow[500], marginRight: '5px' }} />
             <Typography sx={{ fontSize: "1rem" }}>Idle</Typography>
           </Box>
@@ -59,9 +59,9 @@ export const Cards = ({vehicleRunningCount, vehicleStoppedCount, vehicleOverspee
       </Card>
 
       {/* Unreachable */}
-      <Card sx={{ width: 197, margin: '5px', backgroundColor: "#6c757d", borderRadius:"6px"}}>
+      <Card sx={{ width: 197, margin: '5px', backgroundColor:"#fff", borderRadius:"6px", border:"1px solid black",boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)"}}>
         <CardContent sx={{ padding: '10px' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', backgroundColor: blue[200], padding: '5px', borderRadius: 2, marginBottom: '5px' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent:"center", backgroundColor: blue[200], padding: '5px', borderRadius: 2, marginBottom: '5px', width:"100%" }}>
             <ErrorIcon sx={{ color: blue[500], marginRight: '5px' }} />
             <Typography sx={{ fontSize: "1rem" }}>Unreachable</Typography>
           </Box>
@@ -70,9 +70,9 @@ export const Cards = ({vehicleRunningCount, vehicleStoppedCount, vehicleOverspee
       </Card>
 
       {/* New */}
-      <Card sx={{ width: 197, margin: '5px', backgroundColor: "#6c757d", borderRadius:"6px"}}>
+      <Card sx={{ width: 197, margin: '5px', backgroundColor:"#fff", borderRadius:"6px", border:"1px solid black",boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)"}}>
         <CardContent sx={{ padding: '10px' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', backgroundColor: grey[200], padding: '5px', borderRadius: 2, marginBottom: '5px' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent:"center", backgroundColor: grey[200], padding: '5px', borderRadius: 2, marginBottom: '5px', width:"100%" }}>
             <NewReleasesIcon sx={{ color: grey[500], marginRight: '5px' }} />
             <Typography sx={{ fontSize: "1rem" }}>New</Typography>
           </Box>

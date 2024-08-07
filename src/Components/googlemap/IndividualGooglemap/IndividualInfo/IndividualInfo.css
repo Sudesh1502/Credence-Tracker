@@ -1,5 +1,5 @@
 .indiviudalInfo{
-    background-color: rgb(175, 180, 184);
+    background-color: transparent;
     padding: 10px;
 }
 .Infocontainer{
@@ -21,6 +21,7 @@
 }
 .info{
     text-align: start;
+    color:"#363434";
 }
 p{
     padding: 0;

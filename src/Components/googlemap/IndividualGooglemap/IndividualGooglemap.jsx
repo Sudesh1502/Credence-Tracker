@@ -1,3 +1,4 @@
+
 import React, { useRef, useState, useEffect, useCallback } from "react";
 import {
   MapContainer,
@@ -152,6 +153,7 @@ const PopupElement = ({ icon, text }) => (
 );
 
 function IndividualGooglemap({ data, setIndividualMap, individualDataObj }) {
+  // const map = useMap();
   const [showPlayBar, setShowPlayBar] = useState(false);
   const [center, setCenter] = useState(initialCenter);
   const [address, setAddress] = useState("");
@@ -175,6 +177,25 @@ function IndividualGooglemap({ data, setIndividualMap, individualDataObj }) {
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState("");
 
+  // const[speed, setSpeed] = useState(0); 
+
+  // const [course, setCourse] = useState(individualDataObj.course);
+  // const createCustomIcon = (course) => {
+  //   return L.divIcon({
+  //     className: 'custom-icon',
+  //     html: `
+  //       <div style="
+  //         width: 32px; height: 32px;
+  //         background: url(${getIconByCategoryTop(individualDataObj.category)}) no-repeat center center;
+  //         background-size: contain;
+  //         transform: rotate(${course}deg);
+  //         transform-origin: center center;
+  //       "></div>
+  //     `,
+  //     iconSize: [32, 32],
+  //     iconAnchor: [16, 32],
+  //   });
+  // };
 
   const getIconByCategoryTop = (category) => {
     switch (category) {
@@ -203,8 +224,8 @@ function IndividualGooglemap({ data, setIndividualMap, individualDataObj }) {
     ]);
   }, [individualDataObj.latitude, individualDataObj.longitude]);
 
-  console.log("startDate end Date", startDateTime, endDateTime);
-  console.log("isCalneder", isCalender);
+  // console.log("startDate end Date", startDateTime, endDateTime);
+  // console.log("isCalneder", isCalender);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -214,12 +235,7 @@ function IndividualGooglemap({ data, setIndividualMap, individualDataObj }) {
     return () => clearInterval(interval);
   }, []);
 
-  const showMyLocation = useCallback((lati, longi) => {
-    mapRef.current.flyTo([lati, longi], ZOOM_LEVEL, {
-      animate: true,
-      duration: 2,
-    });
-  }, []);
+
 
   const fetchAddress = async (latitude, longitude) => {
     const apiKey = "AIzaSyAvHHoPKPwRFui0undeEUrz00-8w6qFtik";
@@ -235,7 +251,7 @@ function IndividualGooglemap({ data, setIndividualMap, individualDataObj }) {
   };
 
   const fetchPlaybackData = async () => {
-    console.log("Getting your playback");
+    // console.log("Getting your playback");
     isPlaybacking === false
       ? setIsPlaybacking(true)
       : setIsPlaybacking(false) &&
@@ -255,7 +271,7 @@ function IndividualGooglemap({ data, setIndividualMap, individualDataObj }) {
           },
         }
       );
-      console.log(response1.data);
+      // console.log(response1.data);
       setPlaybackData(response1.data);
     } catch (error) {
       console.error("Error fetching device data:", error);
@@ -277,7 +293,7 @@ function IndividualGooglemap({ data, setIndividualMap, individualDataObj }) {
       console.error("Error fetching geofence data:", error);
     }
   };
-  console.log("geofencingngg", geofenceData);
+  // console.log("geofencingngg", geofenceData);
 
   const pairedArray = playbackData
     ? playbackData.map((row) => [row.latitude, row.longitude])
@@ -341,6 +357,21 @@ function IndividualGooglemap({ data, setIndividualMap, individualDataObj }) {
     }
   };
 
+  const showMyLocation = useCallback((lati, longi) => {
+    mapRef.current.flyTo([lati, longi], ZOOM_LEVEL, {
+      animate: true,
+      duration: 2,
+    });
+  }, []);
+
+  const showMyLocationIndividual = useCallback((lati, longi) => {
+    const map = mapRef.current;
+    map.setView([lati, longi], 22, {
+      animate: true,
+      duration: 2,
+    });
+  }, []);
+  let locate;
   useEffect(() => {
     let interval;
     if (isAnimating && pairedArray.length > 0) {
@@ -350,6 +381,10 @@ function IndividualGooglemap({ data, setIndividualMap, individualDataObj }) {
           const newIndex = prevIndex + 1;
           if (newIndex < pairedArray.length) {
             setAnimatedMarkerPosition(pairedArray[newIndex]);
+            locate = pairedArray[newIndex];
+            showMyLocationIndividual(locate[0], locate[1]);
+            
+            console.log("Checking for Auto zoom......................", pairedArray[newIndex])
             return newIndex;
           } else {
             clearInterval(interval);
@@ -361,6 +396,12 @@ function IndividualGooglemap({ data, setIndividualMap, individualDataObj }) {
     }
     return () => clearInterval(interval);
   }, [isAnimating]);
+
+
+  //
+
+
+  
 
   // //Animation
   // console.log("ANimated marker position", animatedMarkerPosition,"paireddddes", pairedArray[0]);
@@ -438,50 +479,19 @@ function IndividualGooglemap({ data, setIndividualMap, individualDataObj }) {
     setIsPlaybacking(false);
     setIsAnimating(false);
   };
+
+  const [livetrack, setLivetrack] = useState(false);
+  const handleLive = () =>{
+
+  }
   return (
     <>
-      <div style={{ minHeight: "90vh" }}>
-        <div
-          style={{
-            display: "flex",
-            gap: "10px",
-            alignItems: "center",
-            marginLeft: "0.5rem",
-          }}
-        >
-          {isCalender && (
-            <Calender
-              setStartDateTime={setStartDateTime}
-              setEndDateTime={setEndDateTime}
-            />
-          )}
-
-          {isCalender && (
-            <Button
-              variant="contained"
-              sx={{
-                backgroundColor: "#000000",
-                "&:hover": {
-                  backgroundColor: "#1a242f",
-                },
-              }}
-              style={{ height: "2.7rem", marginTop: "6px" }}
-              onClick={fetchPlaybackData}
-            >
-              Search
-            </Button>
-          )}
-          {isCalender && (
-            <button className="cutHistory" onClick={handleCutHistory}>
-              Go Back
-            </button>
-          )}
-        </div>
+      
 
         <br />
-        {isPlaybacking &&
+        {/* {isPlaybacking &&
           (!playbackData || !geofenceData || !stoppedPositions) &&
-          <AnimeLoader message={"We appreciate your patience..."}/>}
+          <AnimeLoader message={"We appreciate your patience..."}/>} */}
 
         <div className="mapContainer">
           <MapContainer
@@ -493,7 +503,7 @@ function IndividualGooglemap({ data, setIndividualMap, individualDataObj }) {
               width: "99vw",
               border: "2px solid rgb(140 133 118)",
               // borderRadius: "6px",
-              marginBottom: "35px",
+              marginBottom: "10px",
               marginLeft:"0.75px",
             }}
           >
@@ -620,16 +630,46 @@ function IndividualGooglemap({ data, setIndividualMap, individualDataObj }) {
               })}
           </MapContainer>
         </div>
-        {/* <button
-          onClick={() => {
-            showMyLocation(
-              individualDataObj.latitude,
-              individualDataObj.longitude
-            );
+        
+        <div >
+        <div
+          style={{
+            display: "flex",
+            gap: "10px",
+            alignItems: "center",
+            marginLeft: "0.5rem",
           }}
         >
-          Get Me
-        </button> */}
+          {isCalender && (
+            <Calender
+              setStartDateTime={setStartDateTime}
+              setEndDateTime={setEndDateTime}
+            />
+          )}
+
+          {isCalender && (
+            <Button
+              variant="contained"
+              sx={{
+                color:"#000000",
+                background: "linear-gradient(235deg, #f6e5c1, #8d8d8d)",
+                "&:hover": {
+                  backgroundColor: "#1a242f",
+                },
+              }}
+              style={{ height: "2.7rem", marginTop: "6px" }}
+              onClick={fetchPlaybackData}
+            >
+              Search
+            </Button>
+          )}
+          {isCalender && (
+            <button className="cutHistory" onClick={handleCutHistory}>
+              Go Back
+            </button>
+          )}
+        </div>
+
         <div className="InfoContainer">
           {showPlayBar ? null : (
             <IndividualNav
@@ -639,6 +679,8 @@ function IndividualGooglemap({ data, setIndividualMap, individualDataObj }) {
               setShowPlayBar={setShowPlayBar}
               individualDataObj={individualDataObj}
               setIsCalender={setIsCalender}
+              livetrack={livetrack}
+              setLivetrack = {setLivetrack}
             />
           )}
           {showPlayBar ? (
@@ -656,9 +698,12 @@ function IndividualGooglemap({ data, setIndividualMap, individualDataObj }) {
               progress={progress}
               setProgress={setAnimationProgress}
               individualDataObj={individualDataObj}
+              locate={locate}
+              mapRef={mapRef}
             />
           ) : (
-            <IndividualInfo individualDataObj={individualDataObj} />
+            (!livetrack ? <IndividualInfo individualDataObj={individualDataObj} /> : <></>)
+            
           )}
         </div>
       </div>

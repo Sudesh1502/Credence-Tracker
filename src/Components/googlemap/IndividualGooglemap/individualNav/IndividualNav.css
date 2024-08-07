@@ -6,9 +6,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-top: 2px solid #000000;
-    border-bottom: 2px solid #000000;
     width: 99%;
+    background-color: transparent;
   }
   
   .carNumber {

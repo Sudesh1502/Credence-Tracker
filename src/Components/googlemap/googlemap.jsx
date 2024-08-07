@@ -53,7 +53,7 @@ const initialCenter = {
   lng: 79.2961,
 };
 
-function GoogleMapComponent({ latitude, longitude, data }) {
+function GoogleMapComponent({ latitude, longitude, filteredVehicles }) {
   const [error, setError] = useState("");
   const [address, setAddress] = useState("");
 
@@ -86,7 +86,7 @@ function GoogleMapComponent({ latitude, longitude, data }) {
         }
       };
 
-      const addressPromises = data.map(async (item) => {
+      const addressPromises = filteredVehicles.map(async (item) => {
         const address = await fetchAddress(item.latitude, item.longitude);
         return {
           ...item,
@@ -99,7 +99,7 @@ function GoogleMapComponent({ latitude, longitude, data }) {
     };
 
     processData();
-  }, [data]);
+  }, [filteredVehicles]);
 
   // Function to get the appropriate icon based on the category
   const getIconByCategory = (category) => {

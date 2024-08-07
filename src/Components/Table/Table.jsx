@@ -40,9 +40,8 @@ import AnimeLoader from "../Loader/AnimeLoader.jsx";
 //===================================================================================================================
 //ANIMATION==========================================================================================================
 
-
-import loadingPerson from "../../assets/LoadingPerson.json"
-import waitingPerson from "../../assets/waitingPerson.json"
+import loadingPerson from "../../assets/LoadingPerson.json";
+import waitingPerson from "../../assets/waitingPerson.json";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -92,7 +91,7 @@ export const Tablee = ({ data }) => {
   const [vehicleUnreachableCount, setVehicleUnreachableCount] = useState(0);
   const [apiData, setAPIData] = useState([]);
   const [assetDetailsModalOpen, setAssetDetailsModalOpen] = useState(false);
-  const [assetStatusValue, setAssetStatusValue] = useState("");
+  const [assetStatusValue, setAssetStatusValue] = useState("All assets");
   const [assetsValue, setAssetsValue] = useState("");
   const [usersValue, setUsersValue] = useState("");
   const [groupsValue, setGroupsValue] = useState("");
@@ -127,24 +126,24 @@ export const Tablee = ({ data }) => {
   }, [data]);
 
   useEffect(() => {
-    // console.log(filteredRows);
-    // for (let i = 0; i < filteredRows.length; i++) {
-    //   let row = filteredRows[i];
-    //   if (row.hasOwnProperty('attributes')) {
-    //     for (let key in row.attributes) {
-    //       if (key === 'totalDistance') {
-    //         console.log(row.attributes[key]);
-    //         // COLUMNS(row.attributes[key])
-    //       } else {
-    //         console.log('');
-    //       }
-    //     }
-    //   }
-    // }
+    console.log(filteredRows);
+    for (let i = 0; i < filteredRows.length; i++) {
+      let row = filteredRows[i];
+      if (row.hasOwnProperty("attributes")) {
+        for (let key in row.attributes) {
+          if (key === "totalDistance") {
+            console.log(row.attributes[key]);
+            // COLUMNS(row.attributes[key])
+          } else {
+            console.log("");
+          }
+        }
+      }
+    }
   }, [filteredRows]);
 
   useEffect(() => {
-    const running = data.filter((row) => row.speed > 0).length;
+    const running = data.filter((row) => row.speed > 5).length;
     setVehicleRunningCount(running);
 
     const stopped = data.filter(
@@ -156,7 +155,7 @@ export const Tablee = ({ data }) => {
     setVehicleOverspeedCount(overspeed);
 
     const idle = data.filter(
-      (row) => row.speed === 0 && row.status === "online"
+      (row) => row.speed < 5 && row.status === "online"
     ).length;
     setVehicleIdleCount(idle);
 
@@ -326,6 +325,25 @@ export const Tablee = ({ data }) => {
           )
         : col.Cell,
   }));
+  // ===================================================handling the filter==================================================================
+
+  const determineStatus = (vehicle) => {
+    const currentTime = new Date();
+    const lastUpdateTime = new Date(vehicle.lastUpdate); // Assuming vehicle has a lastUpdate property
+
+    if (vehicle.ignition && vehicle.speed > 5) return "Running";
+    if (vehicle.ignition && vehicle.speed <= 5) return "Ideal";
+    if (!vehicle.ignition && vehicle.speed === 0) return "Stopped";
+    if (!vehicle.ignition && currentTime - lastUpdateTime > 24 * 60 * 60 * 1000)
+      return "Unreachable";
+    return "New";
+  };
+
+  const filteredVehicles = data.filter(vehicle => {
+    const status = determineStatus(vehicle);
+    return assetStatusValue === 'All assets' || status === assetStatusValue;
+  });
+  
 
   return (
     <>
@@ -359,12 +377,13 @@ export const Tablee = ({ data }) => {
                 >
                   <MenuItem value="All assets">All assets</MenuItem>
                   <MenuItem value="Running">Running</MenuItem>
-                  <MenuItem value="Parked">Parked</MenuItem>
-                  <MenuItem value="less than 10km">Less than 10km</MenuItem>
-                  <MenuItem value="Out of Network">Out of Network</MenuItem>
-                  <MenuItem value="Device Fault">Device Fault</MenuItem>
+                  <MenuItem value="Stopped">Stopped</MenuItem>
+                  <MenuItem value="Ideal">Ideal</MenuItem>
+                  <MenuItem value="Unreachable">Unreachable</MenuItem>
+                  <MenuItem value="New">New</MenuItem>
                 </Select>
               </FormControl>
+
               <FormControl
                 variant="outlined"
                 fullWidth
@@ -540,7 +559,7 @@ export const Tablee = ({ data }) => {
             <GoogleMapComponent
               latitude={latitude}
               longitude={longitude}
-              data={data}
+              filteredVehicles={filteredVehicles}
             />
           </div>
         )}
@@ -602,10 +621,11 @@ export const Tablee = ({ data }) => {
               variant="contained"
               onClick={() => setModalOpen(true)}
               sx={{
-                background: "linear-gradient(135deg, #000000 25%, #434343 50%, #000000 75%)",
+                background: "linear-gradient(235deg, #f6e5c1, #8d8d8d)",
                 "&:hover": {
                   backgroundColor: "#1a242f",
                 },
+                color: "#000000",
               }}
             >
               Manage Columns
@@ -648,8 +668,9 @@ export const Tablee = ({ data }) => {
                       style={{
                         minWidth: 50,
                         borderRight: "1px solid #ddd",
-                        background: "linear-gradient(135deg, #000000 25%, #434343 50%, #000000 75%)",
-                        color: "white",
+                        backgroundColor: "#a5a199",
+                        color: "#000000",
+                        fontWeight: "600",
                       }}
                     >
                       <input
@@ -673,8 +694,8 @@ export const Tablee = ({ data }) => {
                             style={{
                               minWidth: column.minWidth,
                               borderRight: "1px solid #ddd",
-                              background: "linear-gradient(135deg, #000000 25%, #434343 50%, #000000 75%)",
-                              color: "white",
+                              backgroundColor: "#a5a199",
+                              color: "#000000",
                             }}
                           >
                             <div
@@ -714,9 +735,13 @@ export const Tablee = ({ data }) => {
                 </TableHead>
                 <TableBody>
                   {!sortedData || sortedData.length === 0 ? (
-                    <AnimeLoader message={"Please hold on while we retrieve your information..."}/>
+                    <AnimeLoader
+                      message={
+                        "Please hold on while we retrieve your information..."
+                      }
+                    />
                   ) : (
-                    sortedData
+                    filteredVehicles
                       .slice(
                         page * rowsPerPage,
                         page * rowsPerPage + rowsPerPage
@@ -803,7 +828,7 @@ export const Tablee = ({ data }) => {
             </TableContainer>
             <TablePagination
               style={{
-                backgroundColor: "#fff",
+                // background: "linear-gradient(135deg, #e0e0e0, #a0a0a0)",
                 borderBottom: "1px solid black",
               }}
               rowsPerPageOptions={[10, 25, 10, 0]}
@@ -827,10 +852,11 @@ export const Tablee = ({ data }) => {
             onClick={handleExport}
             sx={{
               marginRight: "10px",
-              background: "linear-gradient(135deg, #000000 25%, #434343 50%, #000000 75%)",
+              background: "linear-gradient(235deg, #f6e5c1, #8d8d8d)",
               "&:hover": {
                 backgroundColor: "#1a242f",
               },
+              color: "#000000",
             }}
             style={{
               marginLeft: "20px",
