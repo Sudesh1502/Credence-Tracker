@@ -338,13 +338,48 @@ export const Tablee = ({ data }) => {
       return "Unreachable";
     return "New";
   };
+  const [filteredAssets, setFilteredAssets] = useState(data);
 
-  const filteredVehicles = data.filter(vehicle => {
-    const status = determineStatus(vehicle);
-    return assetStatusValue === 'All assets' || status === assetStatusValue;
-  });
+  
   
 
+  const filteredVehicles = filteredAssets.filter((vehicle) => {
+    const status = determineStatus(vehicle);
+    return assetStatusValue === "All assets" || status === assetStatusValue;
+  });
+  useEffect(() => {
+    if (assetsValue === "All assets" || assetsValue === "") {
+      setFilteredAssets(data);
+    } else {
+      const filteredData = data.filter(asset => asset.name === assetsValue);
+      setFilteredAssets(filteredData);
+    }
+  }, [assetsValue, data]);
+  
+  // Update the filteredRows to use filteredAssets
+  useEffect(() => {
+    setFilteredRows(
+      filteredAssets.map((row) => ({ ...row, isSelected: false }))
+    );
+  }, [filteredAssets]);
+
+
+
+  useEffect(() => {
+    let filteredData = data;
+  
+    if (vehiclesValue && vehiclesValue !== "All vehicles") {
+      filteredData = filteredData.filter(asset => asset.category === vehiclesValue);
+    }
+  
+    setFilteredAssets(filteredData);
+  }, [vehiclesValue, data]);
+  
+  
+  const handleSelectVehicle = (event) => {
+    setVehiclesValue(event.target.value);
+  };
+  
   return (
     <>
       {/* {data?<Loader/>:<></>} */}
@@ -369,7 +404,7 @@ export const Tablee = ({ data }) => {
               >
                 <InputLabel id="asset-status-label-1">Asset Status</InputLabel>
                 <Select
-                  labelId="asset-status-label-1"
+                  labelId="asset-status-labezl-1"
                   id="asset-status-select-1"
                   value={assetStatusValue}
                   onChange={(e) => setAssetStatusValue(e.target.value)}
@@ -394,10 +429,18 @@ export const Tablee = ({ data }) => {
                   labelId="assets-label-2"
                   id="assets-select-2"
                   value={assetsValue}
-                  onChange={(e) => setAssetsValue(e.target.value)}
+                  onChange={(e) => {
+                    setAssetsValue(e.target.value);
+                    handleSelectVehicle()
+                  }}
                   label="Select Assets"
                 >
-                  {/* Add your asset options here */}
+                  <MenuItem value="All assets">All assets</MenuItem>
+                  {data.map((asset) => (
+                    <MenuItem key={asset.name} value={asset.name}>
+                      {asset.name}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
 
@@ -516,20 +559,20 @@ export const Tablee = ({ data }) => {
                   labelId="vehicles-label-6"
                   id="vehicles-select-6"
                   value={vehiclesValue}
-                  onChange={(e) => setVehiclesValue(e.target.value)}
+                  // onChange={(e) => {
+                  //   setVehiclesValue(e.target.value)
+                  //   // handleSelectVehicle(e)
+                  // }}
                   label="Select Asset Status"
                 >
-                  <MenuItem value="MH40BL3039-BESA">MH40BL3039-BESA</MenuItem>
-                  <MenuItem value="MH40AT0461-HANSA">MH40AT0461-HANSA</MenuItem>
-                  <MenuItem value="MH04CU9077">MH04CU9077</MenuItem>
-                  <MenuItem value="MH34BG5552">MH34BG5552</MenuItem>
-                  <MenuItem value="MH31FC2330">MH31FC2330</MenuItem>
-                  <MenuItem value="MH31FC1100">MH31FC1100</MenuItem>
-                  <MenuItem value="MH31-EQ0455">MH31-EQ0455</MenuItem>
-                  <MenuItem value="Mixer">Mixer</MenuItem>
-                  <MenuItem value="MH29M8497-HANSA">MH29M8497-HANSA</MenuItem>
-
                   {/* Add your landmark options here */}
+                  <MenuItem value="All assets">All Vehicles</MenuItem>
+                  <MenuItem value="motorcycle">Bikes</MenuItem>
+                  <MenuItem value="car">Cars</MenuItem>
+                  <MenuItem value="Auto">Autos</MenuItem>
+                  <MenuItem value="truck">Trucks</MenuItem>
+                  <MenuItem value="tractor">Tractors</MenuItem>
+                  <MenuItem value="jcb">Jcb</MenuItem>
                 </Select>
               </FormControl>
             </div>

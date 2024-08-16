@@ -1,0 +1,125 @@
+*{
+    margin: 0px;
+    padding: 0px;
+}
+.loginContainer{
+    background-color: #f9e1cd;
+    height: 100vh;
+    display:flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
+.logoAnimation, .loginSignup{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 80%;
+}
+
+.loginSignup{
+    /* align-items: center; */
+    width: 470px;
+    border-radius: 20px;
+    background-color: #fff;
+    box-shadow:rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    padding: 30px;
+    gap: 30px;
+}
+
+.nameInput{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+.nameInputElement, .email, .password, .createAccountBtn{
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid #6c6a6a;
+    width: 100%;
+}
+/*  */
+.createAccountBtn{
+    background-color: #e8842a; 
+    color: #fff;
+    border: none !important;
+    transition: 0.2s;
+}
+
+.createAccountBtn:hover {
+    background-color: #f9a253;
+    color: #171717;
+}
+
+.asking{
+    display: flex;
+    gap: 5px;
+    align-items: end;
+}
+
+.divider{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 0px 2px;
+}
+
+.line{
+    height: 2px;
+    background-color: #b9b3b3;
+    width: 100%;
+    margin-top: 4px;
+}
+
+.googleFacebook{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+   justify-content: center;
+}
+.googleFacebookbtn{
+    
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    /* font-size: 16px; */
+    cursor: pointer;
+    background-color: #fff;
+}
+
+
+button img {
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+}
+.google-btn {
+    border-color: #ccc;
+}
+
+.google-btn img {
+    width: 55px;
+}
+
+.facebook-btn {
+    border-color: #ccc;
+}
+
+.facebook-btn img {
+    width: 55px;
+}
+
+.logsignInswtich{
+    color: gray;
+    font-weight: 600;
+    font-size: 0.8rem;
+    transition: 0.2s;
+}
+
+.logsignInswtich:hover{
+    color:#e8842a;
+}

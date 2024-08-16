@@ -144,7 +144,7 @@ const LiveTracking = ({ individualDataObj, setTrack }) => {
               {individualDataObj.name}: {latLng.lat}, {latLng.lng}
             </Popup>
           </Marker>
-          <Polyline positions={positions} color="blue" />
+          {/* <Polyline positions={positions} color="blue" /> */}
         </MapContainer>
 
         <div className="liveInfo">
