@@ -14,7 +14,7 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: start;
     height: 80%;
 }
 
@@ -122,4 +122,13 @@ button img {
 
 .logsignInswtich:hover{
     color:#e8842a;
+}
+
+.loginLogo{
+    width: 314px;
+    margin-bottom: 7rem;
+}
+
+.loginLogoImg{
+    width: 314px;
 }

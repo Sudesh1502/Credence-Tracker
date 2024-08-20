@@ -251,31 +251,29 @@ function IndividualGooglemap({ data, setIndividualMap, individualDataObj }) {
   };
 
   const fetchPlaybackData = async () => {
-    // console.log("Getting your playback");
     isPlaybacking === false
       ? setIsPlaybacking(true)
       : setIsPlaybacking(false) &&
         setPlaybackData(null) &&
         setGeofenceData(null);
-
+  
     try {
       const username = "hbgadget221@gmail.com";
       const password = "123456";
       const token = btoa(`${username}:${password}`);
       const response1 = await axios.get(
-        `
-        https://rocketsalestracker.com/api/positions?deviceId=${individualDataObj.deviceId}&from=${startDateTime}&to=${endDateTime}`,
+        `https://rocketsalestracker.com/api/positions?deviceId=${individualDataObj.deviceId}&from=${startDateTime}&to=${endDateTime}`,
         {
           headers: {
             Authorization: `Basic ${token}`,
           },
         }
       );
-      // console.log(response1.data);
       setPlaybackData(response1.data);
     } catch (error) {
       console.error("Error fetching device data:", error);
     }
+    
     try {
       const username = "hbgadget221@gmail.com";
       const password = "123456";
@@ -296,8 +294,26 @@ function IndividualGooglemap({ data, setIndividualMap, individualDataObj }) {
   // console.log("geofencingngg", geofenceData);
 
   const pairedArray = playbackData
-    ? playbackData.map((row) => [row.latitude, row.longitude])
-    : [];
+  ? playbackData.map((row) => [row.latitude, row.longitude, row.course]) // Ensure course is included
+  : [];
+
+// Use the course from the playback data to create custom icons
+const createCustomIcon = (heading, iconUrl) => {
+  return L.divIcon({
+    className: 'custom-icon',
+    html: `
+      <div style="
+        width: 35px; height: 45px;
+        background: url(${iconUrl}) no-repeat center center;
+        background-size: contain;
+        transform: rotate(${heading}deg);
+        transform-origin: center center;
+      "></div>
+    `,
+    iconSize: [35, 45],
+    iconAnchor: [17, 45],
+  });
+};
 
   const handleDateTimeChange = (newValue) => {
     const formattedStartDateTime = newValue[0]
@@ -372,19 +388,71 @@ function IndividualGooglemap({ data, setIndividualMap, individualDataObj }) {
     });
   }, []);
   let locate;
+
+
+
+
+
+
+
+  const calculateHeading = (startLatLng, endLatLng) => {
+    if (!startLatLng || !endLatLng || startLatLng.length < 2 || endLatLng.length < 2) {
+      // Return 0 or any default heading if input is invalid
+      return 0;
+    }
+  
+    const startLat = (startLatLng[0] * Math.PI) / 180;
+    const startLng = (startLatLng[1] * Math.PI) / 180;
+    const endLat = (endLatLng[0] * Math.PI) / 180;
+    const endLng = (endLatLng[1] * Math.PI) / 180;
+  
+    const dLon = endLng - startLng;
+    const y = Math.sin(dLon) * Math.cos(endLat);
+    const x =
+      Math.cos(startLat) * Math.sin(endLat) -
+      Math.sin(startLat) * Math.cos(endLat) * Math.cos(dLon);
+    const heading = Math.atan2(y, x);
+  
+    return (heading * 180) / Math.PI;
+  };
+  
+
+  // const createCustomIcon = (heading, iconUrl) => {
+  //   return L.divIcon({
+  //     className: 'custom-icon',
+  //     html: `
+  //       <div style="
+  //         width: 35px; height: 45px;
+  //         background: url(${iconUrl}) no-repeat center center;
+  //         background-size: contain;
+  //         transform: rotate(${heading}deg);
+  //         transform-origin: center center;
+  //       "></div>
+  //     `,
+  //     iconSize: [35, 45],
+  //     iconAnchor: [17, 45],
+  //   });
+  // };
+  
+  
+  
+
+  
   useEffect(() => {
     let interval;
-    if (isAnimating && pairedArray.length > 0) {
+    if (isAnimating && pairedArray.length > 1) {
       setAnimatedMarkerPosition(pairedArray[0]);
       interval = setInterval(() => {
         setCurrentIndex((prevIndex) => {
           const newIndex = prevIndex + 1;
           if (newIndex < pairedArray.length) {
-            setAnimatedMarkerPosition(pairedArray[newIndex]);
-            locate = pairedArray[newIndex];
+            const startPos = pairedArray[newIndex - 1];
+            const endPos = pairedArray[newIndex];
+            const heading = endPos[2]; // Use course from API
+            setAnimatedMarkerPosition(endPos);
+            locate = endPos;
             showMyLocationIndividual(locate[0], locate[1]);
-            
-            console.log("Checking for Auto zoom......................", pairedArray[newIndex])
+  
             return newIndex;
           } else {
             clearInterval(interval);
@@ -396,9 +464,10 @@ function IndividualGooglemap({ data, setIndividualMap, individualDataObj }) {
     }
     return () => clearInterval(interval);
   }, [isAnimating]);
+  
 
 
-  //
+  //================================================================================================================================================================================
 
 
   
@@ -567,11 +636,12 @@ function IndividualGooglemap({ data, setIndividualMap, individualDataObj }) {
               </Popup>
             </Marker>
             {isAnimating && animatedMarkerPosition && (
-              <Marker
-                position={animatedMarkerPosition}
-                icon={getIconByCategoryTop(individualDataObj.category)}
-              />
-            )}
+            <Marker
+              position={animatedMarkerPosition}
+              icon={createCustomIcon(calculateHeading(pairedArray[currentIndex - 1], animatedMarkerPosition), getIconByCategoryTop(individualDataObj.category).options.iconUrl)}
+            />
+)}
+
             {isPlaybacking && <Polyline positions={pairedArray} color="blue" />}
             {!isPlaybacking && <Polyline positions={points} color="green" />}
 

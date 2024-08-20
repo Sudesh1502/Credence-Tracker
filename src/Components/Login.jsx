@@ -96,6 +96,10 @@ export const Login = () => {
     <>
     <div className="loginContainer">
       <div className="logoAnimation">
+      <div className="loginLogo">
+        {/* Login/Signup Logo */}
+        <img src="/credence tracker-02.png" className="loginLogoImg" alt="Logo" />
+      </div>
       <RotationAnimation/>
       </div>
 

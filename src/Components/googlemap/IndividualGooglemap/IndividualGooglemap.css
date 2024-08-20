@@ -110,3 +110,10 @@
 .name {
   background-color: #fde9a4;
 }
+
+.custom-icon {
+  position: relative;
+  display: inline-block;
+  width: 35px;
+  height: 45px;
+}
